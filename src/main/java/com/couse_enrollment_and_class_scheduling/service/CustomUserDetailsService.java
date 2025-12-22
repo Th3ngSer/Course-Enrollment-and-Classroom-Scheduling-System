@@ -1,6 +1,6 @@
 package com.couse_enrollment_and_class_scheduling.service;
 
-import com.couse_enrollment_and_class_scheduling.User;
+import com.couse_enrollment_and_class_scheduling.entity.User;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.couse_enrollment_and_class_scheduling.UserRepository;
+import com.couse_enrollment_and_class_scheduling.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -30,8 +30,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getEmail(),
                 user.getPassword(),
                 user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName()))
-                        .toList());
+                    .map(role -> new SimpleGrantedAuthority(role.getName()))
+                    .toList()
+        );
     }
-
+    
 }

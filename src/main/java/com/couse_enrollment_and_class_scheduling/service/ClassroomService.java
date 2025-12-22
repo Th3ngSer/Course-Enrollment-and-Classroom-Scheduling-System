@@ -1,7 +1,7 @@
-package com.couse_enrollment_and_class_scheduling.service;
+package main.java.com.couse_enrollment_and_class_scheduling.service;
 
 import com.couse_enrollment_and_class_scheduling.Classroom;
-import com.couse_enrollment_and_class_scheduling.ClassroomRepository;
+import com.couse_enrollment_and_class_scheduling.repository.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

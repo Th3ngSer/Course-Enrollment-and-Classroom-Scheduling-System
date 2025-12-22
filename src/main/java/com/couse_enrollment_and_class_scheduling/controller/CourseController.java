@@ -1,4 +1,4 @@
-package main.java.com.couse_enrollment_and_class_scheduling.controller;
+package com.couse_enrollment_and_class_scheduling.controller;
 
 import com.couse_enrollment_and_class_scheduling.Course;
 import com.couse_enrollment_and_class_scheduling.service.CourseService;
@@ -46,8 +46,8 @@ public class CourseController {
     // --------------------
     @PostMapping("/add")
     public String addCourse(@Valid @ModelAttribute("course") Course course,
-                            BindingResult bindingResult,
-                            Model model) {
+            BindingResult bindingResult,
+            Model model) {
         if (bindingResult.hasErrors()) {
             return "courses/add";
         }
@@ -78,9 +78,9 @@ public class CourseController {
     // --------------------
     @PostMapping("/edit/{id}")
     public String updateCourse(@PathVariable Long id,
-                               @Valid @ModelAttribute("course") Course course,
-                               BindingResult bindingResult,
-                               Model model) {
+            @Valid @ModelAttribute("course") Course course,
+            BindingResult bindingResult,
+            Model model) {
         if (bindingResult.hasErrors()) {
             return "courses/edit";
         }

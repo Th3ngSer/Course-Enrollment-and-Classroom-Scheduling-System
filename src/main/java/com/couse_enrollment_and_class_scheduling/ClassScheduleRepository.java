@@ -1,10 +1,12 @@
 package com.couse_enrollment_and_class_scheduling;
 
-import com.couse_enrollment_and_class_scheduling.ClassSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.couse_enrollment_and_class_scheduling.entity.ClassSchedule;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;

@@ -1,7 +1,4 @@
-package com.couse_enrollment_and_class_scheduling;
-
-import com.couse_enrollment_and_class_scheduling.entity.Classroom;
-import com.couse_enrollment_and_class_scheduling.entity.Course;
+package com.couse_enrollment_and_class_scheduling.entity;
 import jakarta.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;

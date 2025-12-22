@@ -1,5 +1,7 @@
 package com.couse_enrollment_and_class_scheduling;
 
+import com.couse_enrollment_and_class_scheduling.entity.Course;
+import com.couse_enrollment_and_class_scheduling.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

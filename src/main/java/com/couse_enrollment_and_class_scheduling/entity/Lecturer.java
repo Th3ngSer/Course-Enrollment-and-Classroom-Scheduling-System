@@ -1,4 +1,4 @@
-package main.java.com.couse_enrollment_and_class_scheduling.entity;
+package com.couse_enrollment_and_class_scheduling.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,8 @@ public class Lecturer {
     // --------------------
     // Constructors
     // --------------------
-    public Lecturer() {}
+    public Lecturer() {
+    }
 
     public Lecturer(String fullName, String department, String officeHours) {
         this.fullName = fullName;
@@ -36,17 +37,37 @@ public class Lecturer {
     // --------------------
     // Getters & Setters
     // --------------------
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getDepartment() { return department; }
-    public void setDepartment(String department) { this.department = department; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getOfficeHours() { return officeHours; }
-    public void setOfficeHours(String officeHours) { this.officeHours = officeHours; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getOfficeHours() {
+        return officeHours;
+    }
+
+    public void setOfficeHours(String officeHours) {
+        this.officeHours = officeHours;
+    }
 
     // --------------------
     // Optional: toString for debugging
@@ -54,10 +75,10 @@ public class Lecturer {
     @Override
     public String toString() {
         return "Lecturer{" +
-               "id=" + id +
-               ", fullName='" + fullName + '\'' +
-               ", department='" + department + '\'' +
-               ", officeHours='" + officeHours + '\'' +
-               '}';
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", department='" + department + '\'' +
+                ", officeHours='" + officeHours + '\'' +
+                '}';
     }
 }

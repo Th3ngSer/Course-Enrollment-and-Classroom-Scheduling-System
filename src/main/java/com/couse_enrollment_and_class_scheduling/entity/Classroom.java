@@ -1,4 +1,4 @@
-package main.java.com.couse_enrollment_and_class_scheduling.entity;
+package com.couse_enrollment_and_class_scheduling.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -31,7 +31,8 @@ public class Classroom {
     // --------------------
     // Constructors
     // --------------------
-    public Classroom() {}
+    public Classroom() {
+    }
 
     public Classroom(String roomNumber, String building, Integer maxCapacity) {
         this.roomNumber = roomNumber;
@@ -42,17 +43,37 @@ public class Classroom {
     // --------------------
     // Getters & Setters
     // --------------------
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getRoomNumber() { return roomNumber; }
-    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getBuilding() { return building; }
-    public void setBuilding(String building) { this.building = building; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
-    public Integer getMaxCapacity() { return maxCapacity; }
-    public void setMaxCapacity(Integer maxCapacity) { this.maxCapacity = maxCapacity; }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public String getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(String building) {
+        this.building = building;
+    }
+
+    public Integer getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public void setMaxCapacity(Integer maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
 
     // --------------------
     // Optional: toString for debugging
@@ -60,10 +81,10 @@ public class Classroom {
     @Override
     public String toString() {
         return "Classroom{" +
-               "id=" + id +
-               ", roomNumber='" + roomNumber + '\'' +
-               ", building='" + building + '\'' +
-               ", maxCapacity=" + maxCapacity +
-               '}';
+                "id=" + id +
+                ", roomNumber='" + roomNumber + '\'' +
+                ", building='" + building + '\'' +
+                ", maxCapacity=" + maxCapacity +
+                '}';
     }
 }

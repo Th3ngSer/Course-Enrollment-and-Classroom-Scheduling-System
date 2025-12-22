@@ -1,6 +1,6 @@
-package main.java.com.couse_enrollment_and_class_scheduling.repository;
+package com.couse_enrollment_and_class_scheduling.repository;
 
-import com.couse_enrollment_and_class_scheduling.Course;
+import com.couse_enrollment_and_class_scheduling.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

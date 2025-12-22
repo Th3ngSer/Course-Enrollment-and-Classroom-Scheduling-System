@@ -1,4 +1,4 @@
-package main.java.com.couse_enrollment_and_class_scheduling.entity;
+package com.couse_enrollment_and_class_scheduling.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -37,10 +37,11 @@ public class Course {
     private Integer capacity;
 
     // Constructors
-    public Course() {}
+    public Course() {
+    }
 
     public Course(String courseCode, String courseName, Integer credits,
-                  String description, Integer capacity) {
+            String description, Integer capacity) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.credits = credits;
@@ -49,32 +50,62 @@ public class Course {
     }
 
     // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getCourseCode() { return courseCode; }
-    public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getCourseName() { return courseName; }
-    public void setCourseName(String courseName) { this.courseName = courseName; }
+    public String getCourseCode() {
+        return courseCode;
+    }
 
-    public Integer getCredits() { return credits; }
-    public void setCredits(Integer credits) { this.credits = credits; }
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getCourseName() {
+        return courseName;
+    }
 
-    public Integer getCapacity() { return capacity; }
-    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public Integer getCredits() {
+        return credits;
+    }
+
+    public void setCredits(Integer credits) {
+        this.credits = credits;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
 
     @Override
     public String toString() {
         return "Course{" +
-               "id=" + id +
-               ", courseCode='" + courseCode + '\'' +
-               ", courseName='" + courseName + '\'' +
-               ", credits=" + credits +
-               ", capacity=" + capacity +
-               '}';
+                "id=" + id +
+                ", courseCode='" + courseCode + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", credits=" + credits +
+                ", capacity=" + capacity +
+                '}';
     }
 }

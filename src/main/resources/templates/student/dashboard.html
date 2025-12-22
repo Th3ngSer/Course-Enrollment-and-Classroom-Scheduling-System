@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-box">
+            <h1>Welcome, Student!</h1>
+            <p>Username: <span th:text="${username}"></span></p>
+            
+            <div class="actions">
+                <a href="/student/courses" class="btn btn-primary">Browse Courses</a>
+                <a href="/student/enrollments" class="btn btn-primary">My Enrollments</a>
+                <a href="/logout" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

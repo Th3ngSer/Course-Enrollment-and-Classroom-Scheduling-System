@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Lecturers - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h3>Admin Panel</h3>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/courses">Manage Courses</a>
+            <a href="/admin/lecturers" class="active">Manage Lecturers</a>
+            <a href="/admin/classrooms">Manage Classrooms</a>
+            <a href="/admin/users">User Management</a>
+            <a href="/logout" style="color: #e74c3c;">Logout</a>
+        </div>
+        <div class="main-content">
+            <h1>Lecturer Management</h1>
+            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
+            
+            <a href="/admin/lecturers/assign" class="btn btn-primary">Assign Lecturer to Course</a>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Lecturer ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Assigned Courses</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>L001</td>
+                        <td>Dr. John Smith</td>
+                        <td>smith@university.edu</td>
+                        <td>Computer Science</td>
+                        <td>CS101, CS301</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>L002</td>
+                        <td>Dr. Jane Johnson</td>
+                        <td>johnson@university.edu</td>
+                        <td>Computer Science</td>
+                        <td>CS201</td>
+                        <td>Active</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

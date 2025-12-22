@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Courses - Lecturer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .course-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Courses</h1>
+        <p>Welcome, <span th:text="${username}"></span> (<span th:text="${role}"></span>)</p>
+        
+        <a href="/lecturer/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        
+        <div class="courses-list">
+            <div class="course-card">
+                <div class="course-header">
+                    <h3>CS101 - Introduction to Programming</h3>
+                    <span class="badge">Active</span>
+                </div>
+                <p>Schedule: Mon/Wed 9:00-10:30 AM</p>
+                <p>Room: CS Building 101</p>
+                <p>Enrolled Students: 45</p>
+                <a href="/lecturer/courses/1/students" class="btn btn-primary">View Students</a>
+            </div>
+            
+            <div class="course-card">
+                <div class="course-header">
+                    <h3>CS201 - Data Structures</h3>
+                    <span class="badge">Active</span>
+                </div>
+                <p>Schedule: Tue/Thu 2:00-3:30 PM</p>
+                <p>Room: CS Building 205</p>
+                <p>Enrolled Students: 38</p>
+                <a href="/lecturer/courses/2/students" class="btn btn-primary">View Students</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-CouseEnrollAndClassSchedulingApplication<Course-Enrollment-and-Classroom-Scheduling-System>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.couse_enrollment_and_class_scheduling.CouseEnrollAndClassSchedulingApplication",
+      "projectName": "Course-Enrollment-and-Classroom-Scheduling-System",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

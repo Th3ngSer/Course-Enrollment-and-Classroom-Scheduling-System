@@ -1,0 +1,35 @@
+<div>
+    <h2>Courses</h2>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Web Programming</td>
+                <td>Open</td>
+                <td>
+                    <a href="/courses/1" class="btn btn-primary btn-sm">
+                        View
+                    </a>
+
+                    <button class="btn btn-danger btn-sm"
+                            sec:authorize="hasRole('ADMIN')">
+                        Delete
+                    </button>
+
+                    <button class="btn btn-success btn-sm"
+                            sec:authorize="hasRole('STUDENT')">
+                        Enroll
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,26 @@
+<div th:fragment="sidebar"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <ul class="list-group list-group-flush">
+
+        <li class="list-group-item">
+            <a href="/dashboard">Dashboard</a>
+        </li>
+
+        <li class="list-group-item"
+            sec:authorize="hasRole('ADMIN')">
+            <a href="/courses">Manage Courses</a>
+        </li>
+
+        <li class="list-group-item"
+            sec:authorize="hasRole('TEACHER')">
+            <a href="/courses">My Courses</a>
+        </li>
+
+        <li class="list-group-item"
+            sec:authorize="hasRole('STUDENT')">
+            <a href="/courses">Enroll Courses</a>
+        </li>
+
+    </ul>
+</div>

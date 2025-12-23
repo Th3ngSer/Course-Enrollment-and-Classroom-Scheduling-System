@@ -1,0 +1,12 @@
+<div>
+    <h2>Dashboard</h2>
+    <p>Welcome to the system.</p>
+
+    <div class="alert alert-success" th:if="${success}">
+        <span th:text="${success}"></span>
+    </div>
+
+    <div class="alert alert-danger" th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+</div>

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "courses", uniqueConstraints = {
@@ -36,6 +37,17 @@ public class Course {
     @Column(nullable = false)
     private Integer capacity;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lecturer_id")
+    private Lecturer lecturer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "classroom_id")
+    private Classroom classroom;
+    
+    @Formula("(SELECT COUNT(*) FROM enrollments e WHERE e.course_id = id)")
+    private Integer currentStudents;
+
     // Constructors
     public Course() {
     }
@@ -49,53 +61,33 @@ public class Course {
         this.capacity = capacity;
     }
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
+    // Updated Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getCourseCode() { return courseCode; }
+    public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
+    public String getCourseName() { return courseName; }
+    public void setCourseName(String courseName) { this.courseName = courseName; }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
+    public Integer getCredits() { return credits; }
+    public void setCredits(Integer credits) { this.credits = credits; }
 
-    public String getCourseName() {
-        return courseName;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
+    public Integer getCapacity() { return capacity; }
+    public void setCapacity(Integer capacity) { this.capacity = capacity; }
 
-    public Integer getCredits() {
-        return credits;
-    }
+    public Lecturer getLecturer() { return lecturer; }
+    public void setLecturer(Lecturer lecturer) { this.lecturer = lecturer; }
 
-    public void setCredits(Integer credits) {
-        this.credits = credits;
-    }
+    public Classroom getClassroom() { return classroom; }
+    public void setClassroom(Classroom classroom) { this.classroom = classroom; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
+    public Integer getCurrentStudents() { 
+        return currentStudents != null ? currentStudents : 0; 
     }
 
     @Override

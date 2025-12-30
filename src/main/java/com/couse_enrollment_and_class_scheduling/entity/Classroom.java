@@ -28,9 +28,7 @@ public class Classroom {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
 
-    // --------------------
     // Constructors
-    // --------------------
     public Classroom() {
     }
 
@@ -40,9 +38,7 @@ public class Classroom {
         this.maxCapacity = maxCapacity;
     }
 
-    // --------------------
     // Getters & Setters
-    // --------------------
     public Long getId() {
         return id;
     }
@@ -75,9 +71,8 @@ public class Classroom {
         this.maxCapacity = maxCapacity;
     }
 
-    // --------------------
+
     // Optional: toString for debugging
-    // --------------------
     @Override
     public String toString() {
         return "Classroom{" +

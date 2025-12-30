@@ -1,0 +1,99 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Classroom List</title>
+    <link rel="stylesheet" th:href="@{/css/classroomstyle.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Classroom List</h1>
+
+      <a th:href="@{/classrooms/add}" class="btn btn-primary"
+        >➕ Add Classroom</a
+      >
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="c : ${classrooms}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.name}"></td>
+            <td th:text="${c.capacity}"></td>
+            <td>
+              <a
+                th:href="@{/classrooms/edit/{id}(id=${c.id})}"
+                class="btn btn-warning"
+                >Edit</a
+              >
+
+              <a
+                th:href="@{/classrooms/delete/{id}(id=${c.id})}"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure?')"
+                >Delete</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Classroom List</title>
+    <link rel="stylesheet" th:href="@{/css/classroomstyle.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Classroom List</h1>
+
+      <a th:href="@{/classrooms/add}" class="btn btn-primary">
+        ➕ Add Classroom
+      </a>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Room Number</th>
+            <th>Building</th>
+            <th>Max Capacity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="c : ${classrooms}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.roomNumber}"></td>
+            <td th:text="${c.building}"></td>
+            <td th:text="${c.maxCapacity}"></td>
+            <td>
+              <a
+                th:href="@{/classrooms/edit/{id}(id=${c.id})}"
+                class="btn btn-warning"
+                >Edit</a
+              >
+
+              <a
+                th:href="@{/classrooms/delete/{id}(id=${c.id})}"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure?')"
+                >Delete</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

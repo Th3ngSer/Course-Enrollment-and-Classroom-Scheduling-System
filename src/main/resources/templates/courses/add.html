@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Add Course</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card {
+        background: #ffffff;
+        width: 420px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #555;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        outline: none;
+        transition: border 0.3s;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: #667eea;
+      }
+
+      textarea {
+        resize: none;
+        height: 80px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background: #667eea;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .btn:hover {
+        background: #5a67d8;
+      }
+
+      .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #667eea;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>Add New Course</h2>
+
+      <form th:action="@{/courses/add}" th:object="${course}" method="post">
+        <div class="form-group">
+          <label>Course Code</label>
+          <input type="text" th:field="*{courseCode}" placeholder="CS101" />
+        </div>
+
+        <div class="form-group">
+          <label>Course Name</label>
+          <input
+            type="text"
+            th:field="*{courseName}"
+            placeholder="Introduction to Programming"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Credits</label>
+          <input type="number" th:field="*{credits}" placeholder="3" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            th:field="*{description}"
+            placeholder="Course description..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" th:field="*{capacity}" placeholder="40" />
+        </div>
+
+        <button type="submit" class="btn">Add Course</button>
+      </form>
+
+      <a th:href="@{/courses}" class="back-link">← Back to Course List</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Courses</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: auto;
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .add-btn {
+        background: #667eea;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .add-btn:hover {
+        background: #5a67d8;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      thead {
+        background: #667eea;
+        color: white;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        text-align: center;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #f7f7f7;
+      }
+
+      tbody tr:hover {
+        background: #edf2ff;
+      }
+
+      th {
+        font-weight: 600;
+      }
+
+      .actions a {
+        margin: 0 6px;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .edit-link {
+        color: #4caf50;
+      }
+
+      .edit-link:hover {
+        text-decoration: underline;
+      }
+
+      .delete-link {
+        color: #e53e3e;
+      }
+
+      .delete-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Course List</h1>
+
+      <div class="top-bar">
+        <span>Total Courses: <b th:text="${courses.size()}"></b></span>
+        <a th:href="@{/courses/add}" class="add-btn">+ Add Course</a>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Credits</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="c : ${courses}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.courseCode}"></td>
+            <td th:text="${c.courseName}"></td>
+            <td th:text="${c.credits}"></td>
+            <td th:text="${c.capacity}"></td>
+            <td class="actions">
+              <a th:href="@{/courses/edit/{id}(id=${c.id})}" class="edit-link"
+                >Edit</a
+              >
+
+              <a
+                th:href="@{/courses/delete/{id}(id=${c.id})}"
+                class="delete-link"
+                onclick="return confirm('Delete this course?')"
+              >
+                Delete
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

@@ -21,29 +21,22 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-
-    // --------------------
     // List all courses
-    // --------------------
     @GetMapping
     public String listCourses(Model model) {
         List<Course> courses = courseService.getAllCourses();
         model.addAttribute("courses", courses);
-        return "courses/list"; // Thymeleaf template: src/main/resources/templates/courses/list.html
+        return "courses/list";
     }
 
-    // --------------------
     // Show form to add a new course
-    // --------------------
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("course", new Course());
         return "courses/add"; // Thymeleaf template
     }
 
-    // --------------------
     // Handle add course form submission
-    // --------------------
     @PostMapping("/add")
     public String addCourse(@Valid @ModelAttribute("course") Course course,
             BindingResult bindingResult,
@@ -62,20 +55,16 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    // --------------------
     // Show form to edit a course
-    // --------------------
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Course course = courseService.getCourseById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         model.addAttribute("course", course);
-        return "courses/edit"; // Thymeleaf template
+        return "courses/edit";
     }
 
-    // --------------------
     // Handle edit course form submission
-    // --------------------
     @PostMapping("/edit/{id}")
     public String updateCourse(@PathVariable Long id,
             @Valid @ModelAttribute("course") Course course,
@@ -95,9 +84,7 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    // --------------------
     // Delete course
-    // --------------------
     @GetMapping("/delete/{id}")
     public String deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);

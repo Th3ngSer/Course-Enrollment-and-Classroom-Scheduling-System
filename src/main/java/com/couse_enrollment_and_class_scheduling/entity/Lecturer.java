@@ -22,9 +22,7 @@ public class Lecturer {
     @Column(name = "office_hours", length = 100)
     private String officeHours;
 
-    // --------------------
     // Constructors
-    // --------------------
     public Lecturer() {
     }
 
@@ -34,9 +32,7 @@ public class Lecturer {
         this.officeHours = officeHours;
     }
 
-    // --------------------
     // Getters & Setters
-    // --------------------
     public Long getId() {
         return id;
     }
@@ -69,9 +65,8 @@ public class Lecturer {
         this.officeHours = officeHours;
     }
 
-    // --------------------
+
     // Optional: toString for debugging
-    // --------------------
     @Override
     public String toString() {
         return "Lecturer{" +

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Edit Course</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px;
+      }
+
+      .container {
+        max-width: 520px;
+        margin: auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+      }
+
+      .error {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #555;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+      }
+
+      .btn-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      button {
+        background: #667eea;
+        color: #fff;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background: #5a67d8;
+      }
+
+      .back-link {
+        text-decoration: none;
+        color: #555;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Edit Course</h1>
+
+      <form
+        th:action="@{/courses/edit/{id}(id=${course.id})}"
+        th:object="${course}"
+        method="post"
+      >
+        <div
+          th:if="${errorMessage}"
+          class="error"
+          th:text="${errorMessage}"
+        ></div>
+
+        <div class="form-group">
+          <label>Course Code</label>
+          <input type="text" th:field="*{courseCode}" />
+        </div>
+
+        <div class="form-group">
+          <label>Course Name</label>
+          <input type="text" th:field="*{courseName}" />
+        </div>
+
+        <div class="form-group">
+          <label>Credits</label>
+          <input type="number" th:field="*{credits}" />
+        </div>
+
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" th:field="*{capacity}" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea th:field="*{description}"></textarea>
+        </div>
+
+        <div class="btn-group">
+          <a th:href="@{/courses}" class="back-link">← Back</a>
+          <button type="submit">Update Course</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

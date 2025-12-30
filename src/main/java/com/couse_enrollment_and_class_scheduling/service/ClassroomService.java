@@ -17,24 +17,18 @@ public class ClassroomService {
     public ClassroomService(ClassroomRepository classroomRepository) {
         this.classroomRepository = classroomRepository;
     }
-
-    // --------------------
     // List all classrooms
-    // --------------------
     public List<Classroom> getAllClassrooms() {
         return classroomRepository.findAll();
     }
 
-    // --------------------
     // Find classroom by ID
-    // --------------------
     public Optional<Classroom> getClassroomById(Long id) {
         return classroomRepository.findById(id);
     }
 
-    // --------------------
+
     // Add new classroom
-    // --------------------
     public Classroom addClassroom(Classroom classroom) {
         // Validation: roomNumber must be unique
         if (classroomRepository.existsByRoomNumber(classroom.getRoomNumber())) {
@@ -49,9 +43,7 @@ public class ClassroomService {
         return classroomRepository.save(classroom);
     }
 
-    // --------------------
     // Update existing classroom
-    // --------------------
     public Classroom updateClassroom(Long id, Classroom updatedClassroom) {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Classroom not found with id: " + id));
@@ -70,9 +62,7 @@ public class ClassroomService {
         return classroomRepository.save(classroom);
     }
 
-    // --------------------
     // Delete classroom
-    // --------------------
     public void deleteClassroom(Long id) {
         classroomRepository.deleteById(id);
     }

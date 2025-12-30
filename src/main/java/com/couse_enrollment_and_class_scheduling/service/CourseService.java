@@ -18,23 +18,18 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    // --------------------
     // List all courses
-    // --------------------
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
-    // --------------------
+
     // Find course by ID
-    // --------------------
     public Optional<Course> getCourseById(Long id) {
         return courseRepository.findById(id);
     }
 
-    // --------------------
     // Add new course
-    // --------------------
     public Course addCourse(Course course) {
         // Validation: courseCode must be unique
         if (courseRepository.existsByCourseCode(course.getCourseCode())) {
@@ -49,9 +44,8 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    // --------------------
+
     // Update existing course
-    // --------------------
     public Course updateCourse(Long id, Course updatedCourse) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + id));
@@ -72,9 +66,8 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    // --------------------
+
     // Delete course
-    // --------------------
     public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
     }

@@ -22,28 +22,22 @@ public class ClassroomController {
         this.classroomService = classroomService;
     }
 
-    // --------------------
     // List all classrooms
-    // --------------------
     @GetMapping
     public String listClassrooms(Model model) {
         List<Classroom> classrooms = classroomService.getAllClassrooms();
         model.addAttribute("classrooms", classrooms);
-        return "classrooms/list"; // Thymeleaf template
+        return "classrooms/list"; 
     }
 
-    // --------------------
     // Show form to add a new classroom
-    // --------------------
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("classroom", new Classroom());
-        return "classrooms/add"; // Thymeleaf template
+        return "classrooms/add"; 
     }
 
-    // --------------------
     // Handle add classroom form submission
-    // --------------------
     @PostMapping("/add")
     public String addClassroom(@Valid @ModelAttribute("classroom") Classroom classroom,
             BindingResult bindingResult,
@@ -62,20 +56,16 @@ public class ClassroomController {
         return "redirect:/classrooms";
     }
 
-    // --------------------
     // Show form to edit a classroom
-    // --------------------
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Classroom classroom = classroomService.getClassroomById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid classroom Id: " + id));
         model.addAttribute("classroom", classroom);
-        return "classrooms/edit"; // Thymeleaf template
+        return "classrooms/edit"; 
     }
 
-    // --------------------
     // Handle edit classroom form submission
-    // --------------------
     @PostMapping("/edit/{id}")
     public String updateClassroom(@PathVariable Long id,
             @Valid @ModelAttribute("classroom") Classroom classroom,
@@ -95,9 +85,7 @@ public class ClassroomController {
         return "redirect:/classrooms";
     }
 
-    // --------------------
     // Delete classroom
-    // --------------------
     @GetMapping("/delete/{id}")
     public String deleteClassroom(@PathVariable Long id) {
         classroomService.deleteClassroom(id);

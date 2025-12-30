@@ -1,0 +1,130 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Add Classroom</title>
+    <link rel="stylesheet" th:href="@{/css/classroomstyle.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add Classroom</h2>
+
+      <div
+        th:if="${errorMessage}"
+        class="error"
+        th:text="${errorMessage}"
+      ></div>
+
+      <form
+        th:action="@{/classrooms/add}"
+        th:object="${classroom}"
+        method="post"
+      >
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" th:field="*{name}" required />
+        </div>
+
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" th:field="*{capacity}" min="1" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/classrooms}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Add Classroom</title>
+  </head>
+  <body>
+    <h1>Add Classroom</h1>
+
+    <form th:action="@{/classrooms/add}" th:object="${classroom}" method="post">
+      <input type="text" th:field="*{name}" />
+      <br /><br />
+
+      <input type="number" th:field="*{capacity}" />
+      <br /><br />
+
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Add Classroom</title>
+    <link rel="stylesheet" th:href="@{/css/classroomstyle.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Add Classroom</h2>
+
+      <!-- Global error message (service-level) -->
+      <div
+        th:if="${errorMessage}"
+        class="error"
+        th:text="${errorMessage}"
+      ></div>
+
+      <form
+        th:action="@{/classrooms/add}"
+        th:object="${classroom}"
+        method="post"
+      >
+        <!-- Room Number -->
+        <div class="form-group">
+          <label for="roomNumber">Room Number</label>
+          <input
+            id="roomNumber"
+            type="text"
+            th:field="*{roomNumber}"
+            required
+          />
+          <div
+            class="error"
+            th:if="${#fields.hasErrors('roomNumber')}"
+            th:errors="*{roomNumber}"
+          ></div>
+        </div>
+
+        <!-- Building -->
+        <div class="form-group">
+          <label for="building">Building</label>
+          <input id="building" type="text" th:field="*{building}" required />
+          <div
+            class="error"
+            th:if="${#fields.hasErrors('building')}"
+            th:errors="*{building}"
+          ></div>
+        </div>
+
+        <!-- Max Capacity -->
+        <div class="form-group">
+          <label for="maxCapacity">Max Capacity</label>
+          <input
+            id="maxCapacity"
+            type="number"
+            th:field="*{maxCapacity}"
+            min="1"
+            required
+          />
+          <div
+            class="error"
+            th:if="${#fields.hasErrors('maxCapacity')}"
+            th:errors="*{maxCapacity}"
+          ></div>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/classrooms}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </body>
+</html>

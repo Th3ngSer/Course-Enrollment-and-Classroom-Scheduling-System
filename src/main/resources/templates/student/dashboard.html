@@ -9,6 +9,7 @@
     <div class="container">
         <div class="dashboard-box">
             <h1>Welcome, Student!</h1>
+            <div th:if="${param.roleNotAllowed}" class="alert alert-error">Requested role is not permitted — redirected to your default dashboard.</div>
             <p>Username: <span th:text="${username}"></span></p>
             
             <div class="actions">

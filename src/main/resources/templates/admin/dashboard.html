@@ -56,6 +56,7 @@
         </div>
         <div class="main-content">
             <h1>Welcome, Admin <span th:text="${username}"></span>!</h1>
+            <div th:if="${param.roleNotAllowed}" class="alert alert-error">Requested role is not permitted — redirected to your default dashboard.</div>
             <p>You have <strong>ROLE_ADMIN</strong> privileges.</p>
             
             <div class="stats">

@@ -2,44 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Course Enrollment System</title>
+    <title>Login to Course Enrollment System</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <h2>Login to Course System</h2>
-            
-            <div th:if="${param.error}" class="alert alert-error">
-                Invalid username or password.
-            </div>
-            <div th:if="${param.logout}" class="alert alert-success">
-                You have been logged out successfully.
-            </div>
-            <div th:if="${param.registered}" class="alert alert-success">
-                Registration successful! Please login.
-            </div>
-            
-            <form th:action="@{/login}" method="post">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required 
-                           placeholder="Enter your username">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required 
-                           placeholder="Enter your password">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            
-            <div class="register-link">
-                <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
-            </div>
+<div class="container">
+    <div class="login-box">
+        <h2>Login to Course System</h2>
+
+        <div th:if="${param.error}" class="alert alert-error">
+            Invalid username or password.
         </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out successfully.
+        </div>
+        <div th:if="${param.registered}" class="alert alert-success">
+            Registration successful! Please login.
+        </div>
+
+        <form th:action="@{/login}" method="post" class="fade-in">
+            <div class="form-group">
+                <label>Username</label>
+                <input class="form-control" type="text" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" type="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Login As</label>
+                <select name="role" class="form-control">
+                    <option value="">Auto (use assigned role)</option>
+                    <option value="ROLE_STUDENT">Student</option>
+                    <option value="ROLE_LECTURER">Lecturer</option>
+                    <option value="ROLE_ADMIN">Administrator</option>
+                </select>
+                <div class="form-help">Select a role if you have multiple roles assigned.</div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+
+        <p><a th:href="@{/register}">Register</a></p>
     </div>
+</div>
 </body>
 </html>

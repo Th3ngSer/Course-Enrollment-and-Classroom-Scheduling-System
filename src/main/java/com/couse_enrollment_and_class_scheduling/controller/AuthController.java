@@ -1,6 +1,8 @@
 package com.couse_enrollment_and_class_scheduling.controller;
 
 import jakarta.validation.Valid;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,15 +104,18 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/access-denied")
-    public String accessDenied(Model model, org.springframework.security.core.Authentication auth) {
+    @GetMapping("/accessDenied")
+    public String accessDenied(Model model, Authentication auth) {
         if (auth != null) {
             String roles = auth.getAuthorities().stream()
-                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .map(a -> a.getAuthority())
                     .reduce((a, b) -> a + ", " + b)
                     .orElse("No roles");
+        
             model.addAttribute("userRoles", roles);
+            model.addAttribute("requiredRole", "ADMIN / LECTURER / STUDENT");
         }
-        return "access-denied";
+        return "accessDenied";
     }
+    
 }

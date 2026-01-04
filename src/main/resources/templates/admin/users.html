@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h3>Admin Panel</h3>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/courses">Manage Courses</a>
+            <a href="/admin/lecturers">Manage Lecturers</a>
+            <a href="/admin/classrooms">Manage Classrooms</a>
+            <a href="/admin/users" class="active">User Management</a>
+            <a href="/logout" style="color: #e74c3c;">Logout</a>
+        </div>
+        <div class="main-content">
+            <h1>User Management</h1>
+            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
+            
+            <a href="/admin/users/create" class="btn btn-primary">Create New User</a>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>admin</td>
+                        <td>admin@university.edu</td>
+                        <td>System Administrator</td>
+                        <td>ADMIN</td>
+                        <td>Active</td>
+                        <td>
+                            <form action="/admin/users/1/toggle" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-warning">Disable</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>lecturer1</td>
+                        <td>smith@university.edu</td>
+                        <td>Dr. John Smith</td>
+                        <td>LECTURER</td>
+                        <td>Active</td>
+                        <td>
+                            <form action="/admin/users/2/toggle" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-warning">Disable</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>student001</td>
+                        <td>john@student.edu</td>
+                        <td>John Doe</td>
+                        <td>STUDENT</td>
+                        <td>Active</td>
+                        <td>
+                            <form action="/admin/users/3/toggle" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-warning">Disable</button>
+                            </form>
+                            <form action="/admin/users/3/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Delete this user?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

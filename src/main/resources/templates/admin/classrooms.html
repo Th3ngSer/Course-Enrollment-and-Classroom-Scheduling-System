@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Classrooms - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h3>Admin Panel</h3>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/courses">Manage Courses</a>
+            <a href="/admin/lecturers">Manage Lecturers</a>
+            <a href="/admin/classrooms" class="active">Manage Classrooms</a>
+            <a href="/admin/users">User Management</a>
+            <a href="/logout" style="color: #e74c3c;">Logout</a>
+        </div>
+        <div class="main-content">
+            <h1>Classroom Management</h1>
+            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
+            
+            <div class="alert alert-success" th:if="${success}">
+                <span th:text="${success}"></span>
+            </div>
+            
+            <a href="/admin/classrooms/add" class="btn btn-primary">Add New Classroom</a>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Room Number</th>
+                        <th>Building</th>
+                        <th>Capacity</th>
+                        <th>Facilities</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>101</td>
+                        <td>Computer Science Building</td>
+                        <td>60</td>
+                        <td>Projector, Whiteboard</td>
+                        <td>Available</td>
+                        <td>
+                            <a href="/admin/classrooms/1/edit" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="/admin/classrooms/1/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Delete this classroom?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>205</td>
+                        <td>Engineering Building</td>
+                        <td>50</td>
+                        <td>Projector, Lab Equipment</td>
+                        <td>Available</td>
+                        <td>
+                            <a href="/admin/classrooms/2/edit" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="/admin/classrooms/2/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Delete this classroom?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

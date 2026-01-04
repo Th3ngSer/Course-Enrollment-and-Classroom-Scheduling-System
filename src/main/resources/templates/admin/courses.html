@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Courses - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h3>Admin Panel</h3>
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/courses" class="active">Manage Courses</a>
+            <a href="/admin/lecturers">Manage Lecturers</a>
+            <a href="/admin/classrooms">Manage Classrooms</a>
+            <a href="/admin/users">User Management</a>
+            <a href="/logout" style="color: #e74c3c;">Logout</a>
+        </div>
+        <div class="main-content">
+            <h1>Course Management</h1>
+            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
+            
+            <div class="alert alert-success" th:if="${success}">
+                <span th:text="${success}"></span>
+            </div>
+            
+            <a href="/admin/courses/create" class="btn btn-primary">Create New Course</a>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Credits</th>
+                        <th>Lecturer</th>
+                        <th>Students</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CS101</td>
+                        <td>Introduction to Programming</td>
+                        <td>3</td>
+                        <td>Dr. Smith</td>
+                        <td>45</td>
+                        <td class="action-buttons">
+                            <a href="/admin/courses/1/edit" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="/admin/courses/1/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Delete this course?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CS201</td>
+                        <td>Data Structures</td>
+                        <td>3</td>
+                        <td>Dr. Johnson</td>
+                        <td>38</td>
+                        <td class="action-buttons">
+                            <a href="/admin/courses/2/edit" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="/admin/courses/2/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Delete this course?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

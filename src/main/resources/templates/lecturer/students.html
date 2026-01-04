@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Students - Lecturer</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Student List for CS101</h1>
+        <p>Lecturer: <span th:text="${username}"></span></p>
+        
+        <a href="/lecturer/courses" class="btn btn-secondary">Back to Courses</a>
+        
+        <table class="student-table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>S001</td>
+                    <td>John Smith</td>
+                    <td>john@student.edu</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>S002</td>
+                    <td>Jane Doe</td>
+                    <td>jane@student.edu</td>
+                    <td>Active</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

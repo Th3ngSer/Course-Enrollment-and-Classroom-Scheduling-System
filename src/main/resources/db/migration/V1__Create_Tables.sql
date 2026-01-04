@@ -20,13 +20,11 @@ CREATE TABLE user_roles (
     FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
-CREATE TABLE courses (
+CREATE TABLE lecturers (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    course_code VARCHAR(20) NOT NULL UNIQUE, -- Requirement: Unique Constraint
-    course_name VARCHAR(100) NOT NULL,
-    credits INT NOT NULL,
-    description TEXT,
-    capacity INT NOT NULL
+    full_name VARCHAR(100) NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    office_hours VARCHAR(100)
 );
 
 CREATE TABLE classrooms (
@@ -35,6 +33,20 @@ CREATE TABLE classrooms (
     building VARCHAR(50),
     max_capacity INT NOT NULL
 );
+
+CREATE TABLE courses (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    course_code VARCHAR(20) NOT NULL UNIQUE,
+    course_name VARCHAR(100) NOT NULL,
+    credits INT NOT NULL,
+    description TEXT,
+    capacity INT NOT NULL,
+    lecturer_id BIGINT,
+    classroom_id BIGINT,
+    FOREIGN KEY (lecturer_id) REFERENCES lecturers(id),
+    FOREIGN KEY (classroom_id) REFERENCES classrooms(id)
+);
+
 
 CREATE TABLE class_schedules (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -42,10 +42,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/register", "/css/**").permitAll()
+                .requestMatchers("/courses/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/lecturer/**").hasRole("LECTURER")
                 .requestMatchers("/student/**").hasRole("STUDENT")
-                .anyRequest().authenticated()
+                // .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
             .formLogin(login -> login
                 .loginPage("/login")

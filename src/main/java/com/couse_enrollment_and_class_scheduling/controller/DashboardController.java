@@ -35,6 +35,6 @@ public class DashboardController {
     
     @GetMapping("/")
     public String home() {
-        return "redirect:/dashboard";
+        return "redirect:/login";
     }
 }

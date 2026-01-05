@@ -20,11 +20,11 @@ public class ViewCourseScheduleController {
         this.enrollmentService = enrollmentService;
     }
 
-    @GetMapping("/class-schedule")
+    @GetMapping("/browse-course")
     
     public String showClassSchedule(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        return "class-schedule"; // Looks for templates/class-schedule.html
+        return "/browse-course"; // Looks for templates/browse-available-course.html
     }
 
     @GetMapping("/my-courses/{studentId}")

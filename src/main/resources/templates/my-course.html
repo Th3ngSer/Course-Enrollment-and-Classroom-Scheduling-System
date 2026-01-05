@@ -10,12 +10,12 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>My Enrolled Courses</h2>
-        <a href="/class-schedule" class="btn btn-outline-secondary">Back to Schedule</a>
+        <a href="/browse-course" class="btn btn-outline-secondary">Browse courses</a>
     </div>
 
     <div th:if="${myEnrollments == null || #lists.isEmpty(myEnrollments)}" class="alert alert-info mt-4">
         You are not enrolled in any courses yet.
-        <a href="/class-schedule" class="alert-link">Browse available courses</a>
+        <a href="/browse-course" class="alert-link">Browse available courses</a>
     </div>
 
     <table th:unless="${myEnrollments == null || #lists.isEmpty(myEnrollments)}" class="table table-hover mt-3">

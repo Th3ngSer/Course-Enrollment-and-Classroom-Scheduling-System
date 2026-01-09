@@ -1,74 +1,188 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Manage Classrooms - Admin</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body class="dashboard-page">
     <div class="dashboard-container">
-        <div class="sidebar">
-            <h3>Admin Panel</h3>
-            <a href="/admin/dashboard">Dashboard</a>
-            <a href="/admin/courses">Manage Courses</a>
-            <a href="/admin/lecturers">Manage Lecturers</a>
-            <a href="/admin/classrooms" class="active">Manage Classrooms</a>
-            <a href="/admin/users">User Management</a>
-            <a href="/logout" style="color: #e74c3c;">Logout</a>
+      <div class="sidebar">
+        <h3>Admin Panel</h3>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/courses">Manage Courses</a>
+        <a href="/admin/lecturers">Manage Lecturers</a>
+        <a href="/admin/classrooms" class="active">Manage Classrooms</a>
+        <a href="/admin/users">User Management</a>
+        <a href="/logout" class="danger">Logout</a>
+      </div>
+      <div class="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Classroom Management</h1>
+            <p class="page-subtitle">
+              Welcome, <span th:text="${username}"></span> (Admin)
+            </p>
+          </div>
+          <div class="role-pill">ROLE_ADMIN</div>
         </div>
-        <div class="main-content">
-            <h1>Classroom Management</h1>
-            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
-            
-            <div class="alert alert-success" th:if="${success}">
-                <span th:text="${success}"></span>
+
+        <div class="alert alert-success" th:if="${success}">
+          <span th:text="${success}"></span>
+        </div>
+
+        <div class="alert alert-error" th:if="${error}">
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="content-card card">
+          <div class="toolbar">
+            <a
+              href="/admin/classrooms?showCreate=true#create-classroom"
+              class="btn btn-primary"
+              >Add New Classroom</a
+            >
+          </div>
+
+          <div
+            id="create-classroom"
+            class="card"
+            style="margin-bottom: 16px"
+            th:if="${showCreate}"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                align-items: center;
+              "
+            >
+              <h3 style="margin: 0">Create Classroom</h3>
+              <a href="/admin/classrooms" class="btn btn-sm">Hide</a>
             </div>
-            
-            <a href="/admin/classrooms/add" class="btn btn-primary">Add New Classroom</a>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Room Number</th>
-                        <th>Building</th>
-                        <th>Capacity</th>
-                        <th>Facilities</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>101</td>
-                        <td>Computer Science Building</td>
-                        <td>60</td>
-                        <td>Projector, Whiteboard</td>
-                        <td>Available</td>
-                        <td>
-                            <a href="/admin/classrooms/1/edit" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="/admin/classrooms/1/delete" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" 
-                                        onclick="return confirm('Delete this classroom?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>205</td>
-                        <td>Engineering Building</td>
-                        <td>50</td>
-                        <td>Projector, Lab Equipment</td>
-                        <td>Available</td>
-                        <td>
-                            <a href="/admin/classrooms/2/edit" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="/admin/classrooms/2/delete" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" 
-                                        onclick="return confirm('Delete this classroom?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <form
+              th:action="@{/admin/classrooms/create}"
+              th:object="${classroom}"
+              method="post"
+              style="margin-top: 12px"
+            >
+              <div
+                style="
+                  display: grid;
+                  gap: 12px;
+                  grid-template-columns: repeat(3, minmax(0, 1fr));
+                "
+              >
+                <div>
+                  <label>Room Number</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    th:field="*{roomNumber}"
+                    required
+                  />
+                  <div
+                    class="error"
+                    th:if="${#fields.hasErrors('roomNumber')}"
+                    th:errors="*{roomNumber}"
+                  ></div>
+                </div>
+
+                <div>
+                  <label>Building</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    th:field="*{building}"
+                    required
+                  />
+                  <div
+                    class="error"
+                    th:if="${#fields.hasErrors('building')}"
+                    th:errors="*{building}"
+                  ></div>
+                </div>
+
+                <div>
+                  <label>Max Capacity</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    th:field="*{maxCapacity}"
+                    min="1"
+                    required
+                  />
+                  <div
+                    class="error"
+                    th:if="${#fields.hasErrors('maxCapacity')}"
+                    th:errors="*{maxCapacity}"
+                  ></div>
+                </div>
+              </div>
+
+              <div style="margin-top: 12px; display: flex; gap: 10px">
+                <button type="submit" class="btn btn-primary">
+                  Save Classroom
+                </button>
+                <a href="/admin/classrooms" class="btn">Cancel</a>
+              </div>
+            </form>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Room Number</th>
+                <th>Building</th>
+                <th>Max Capacity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(classrooms)}">
+                <td colspan="5" style="text-align: center; padding: 18px">
+                  No classrooms found yet. Click “Add New Classroom”.
+                </td>
+              </tr>
+
+              <tr th:each="room : ${classrooms}">
+                <td th:text="${room.id}"></td>
+                <td th:text="${room.roomNumber}"></td>
+                <td th:text="${room.building}"></td>
+                <td th:text="${room.maxCapacity}"></td>
+                <td class="action-buttons">
+                  <a
+                    th:href="@{/classrooms/edit/{id}(id=${room.id}, returnToAdmin=true)}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+                  <form
+                    th:action="@{/admin/classrooms/delete/{id}(id=${room.id})}"
+                    method="post"
+                    style="display: inline"
+                    onsubmit="return confirm('Delete this classroom?')"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
+

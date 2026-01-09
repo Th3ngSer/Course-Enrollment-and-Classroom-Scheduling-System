@@ -21,10 +21,40 @@
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
       }
 
+      .header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-link {
+        display: inline-block;
+        text-decoration: none;
+        color: #667eea;
+        font-weight: 600;
+      }
+
+      .nav-link:hover {
+        text-decoration: underline;
+      }
+
       h1 {
-        text-align: center;
-        margin-bottom: 20px;
+        margin: 0;
         color: #333;
+      }
+
+      .subtitle {
+        margin-top: 6px;
+        color: #555;
+        font-size: 14px;
       }
 
       .top-bar {
@@ -32,6 +62,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
+        gap: 12px;
+        flex-wrap: wrap;
       }
 
       .add-btn {
@@ -42,16 +74,24 @@
         text-decoration: none;
         font-weight: 500;
         transition: background 0.3s;
+        white-space: nowrap;
       }
 
       .add-btn:hover {
         background: #5a67d8;
       }
 
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
+        min-width: 760px;
       }
 
       thead {
@@ -98,52 +138,96 @@
       .delete-link:hover {
         text-decoration: underline;
       }
+
+      .empty-state {
+        padding: 18px;
+        text-align: center;
+        color: #555;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          padding: 18px;
+        }
+
+        .container {
+          padding: 18px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Course List</h1>
+      <div class="header">
+        <div>
+          <h1>Course List</h1>
+          <div class="subtitle">Browse and manage available courses</div>
+        </div>
+        <div class="nav-links">
+          <a class="nav-link" th:href="@{/admin/dashboard}"
+            >← Admin Dashboard</a
+          >
+          <a class="nav-link" th:href="@{/admin/courses}"
+            >← Admin Course Page</a
+          >
+        </div>
+      </div>
 
       <div class="top-bar">
         <span>Total Courses: <b th:text="${courses.size()}"></b></span>
         <a th:href="@{/courses/add}" class="add-btn">+ Add Course</a>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Credits</th>
-            <th>Capacity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      <div class="alert alert-success" th:if="${success}">
+        <span th:text="${success}"></span>
+      </div>
 
-        <tbody>
-          <tr th:each="c : ${courses}">
-            <td th:text="${c.id}"></td>
-            <td th:text="${c.courseCode}"></td>
-            <td th:text="${c.courseName}"></td>
-            <td th:text="${c.credits}"></td>
-            <td th:text="${c.capacity}"></td>
-            <td class="actions">
-              <a th:href="@{/courses/edit/{id}(id=${c.id})}" class="edit-link"
-                >Edit</a
-              >
+      <div class="alert alert-error" th:if="${error}">
+        <span th:text="${error}"></span>
+      </div>
 
-              <a
-                th:href="@{/courses/delete/{id}(id=${c.id})}"
-                class="delete-link"
-                onclick="return confirm('Delete this course?')"
-              >
-                Delete
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div th:if="${#lists.isEmpty(courses)}" class="empty-state">
+        No courses found yet. Click “Add Course” to create one.
+      </div>
+
+      <div th:if="${!#lists.isEmpty(courses)}" class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Credits</th>
+              <th>Capacity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="c : ${courses}">
+              <td th:text="${c.id}"></td>
+              <td th:text="${c.courseCode}"></td>
+              <td th:text="${c.courseName}"></td>
+              <td th:text="${c.credits}"></td>
+              <td th:text="${c.capacity}"></td>
+              <td class="actions">
+                <a th:href="@{/courses/edit/{id}(id=${c.id})}" class="edit-link"
+                  >Edit</a
+                >
+
+                <a
+                  th:href="@{/courses/delete/{id}(id=${c.id})}"
+                  class="delete-link"
+                  onclick="return confirm('Delete this course?')"
+                >
+                  Delete
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </body>
 </html>
+

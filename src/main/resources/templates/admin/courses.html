@@ -1,80 +1,108 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Manage Courses - Admin</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <style>
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body class="dashboard-page">
     <div class="dashboard-container">
-        <div class="sidebar">
-            <h3>Admin Panel</h3>
-            <a href="/admin/dashboard">Dashboard</a>
-            <a href="/admin/courses" class="active">Manage Courses</a>
-            <a href="/admin/lecturers">Manage Lecturers</a>
-            <a href="/admin/classrooms">Manage Classrooms</a>
-            <a href="/admin/users">User Management</a>
-            <a href="/logout" style="color: #e74c3c;">Logout</a>
+      <div class="sidebar">
+        <h3>Admin Panel</h3>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/courses" class="active">Manage Courses</a>
+        <a href="/admin/lecturers">Manage Lecturers</a>
+        <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/users">User Management</a>
+        <a href="/logout" class="danger">Logout</a>
+      </div>
+
+      <div class="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Course Management</h1>
+            <p class="page-subtitle">
+              Welcome, <span th:text="${username}"></span> (Admin)
+            </p>
+          </div>
+          <div class="role-pill">ROLE_ADMIN</div>
         </div>
-        <div class="main-content">
-            <h1>Course Management</h1>
-            <p>Welcome, <span th:text="${username}"></span> (Admin)</p>
-            
-            <div class="alert alert-success" th:if="${success}">
-                <span th:text="${success}"></span>
-            </div>
-            
-            <a href="/admin/courses/create" class="btn btn-primary">Create New Course</a>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Course Code</th>
-                        <th>Course Name</th>
-                        <th>Credits</th>
-                        <th>Lecturer</th>
-                        <th>Students</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>CS101</td>
-                        <td>Introduction to Programming</td>
-                        <td>3</td>
-                        <td>Dr. Smith</td>
-                        <td>45</td>
-                        <td class="action-buttons">
-                            <a href="/admin/courses/1/edit" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="/admin/courses/1/delete" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" 
-                                        onclick="return confirm('Delete this course?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CS201</td>
-                        <td>Data Structures</td>
-                        <td>3</td>
-                        <td>Dr. Johnson</td>
-                        <td>38</td>
-                        <td class="action-buttons">
-                            <a href="/admin/courses/2/edit" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="/admin/courses/2/delete" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" 
-                                        onclick="return confirm('Delete this course?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <div class="alert alert-success" th:if="${success}">
+          <span th:text="${success}"></span>
         </div>
+
+        <div class="alert alert-error" th:if="${error}">
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="content-card card">
+          <div class="toolbar">
+            <a href="/admin/courses/create" class="btn btn-primary"
+              >Create New Course</a
+            >
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Capacity</th>
+                <th>Lecturer</th>
+                <th>Students</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(courses)}">
+                <td colspan="8" style="text-align: center; padding: 18px">
+                  No courses found yet. Click “Create New Course”.
+                </td>
+              </tr>
+
+              <tr th:each="course : ${courses}">
+                <td th:text="${course.id}"></td>
+                <td th:text="${course.courseCode}"></td>
+                <td th:text="${course.courseName}"></td>
+                <td th:text="${course.credits}"></td>
+                <td th:text="${course.capacity}"></td>
+                <td
+                  th:text="${course.lecturer != null ? course.lecturer.fullName : '—'}"
+                ></td>
+                <td th:text="${course.currentStudents}"></td>
+                <td class="action-buttons">
+                  <a
+                    th:href="@{/courses/edit/{id}(id=${course.id})}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+                  <form
+                    th:action="@{/admin/courses/delete/{id}(id=${course.id})}"
+                    method="post"
+                    style="display: inline"
+                    onsubmit="return confirm('Delete this course?')"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
+

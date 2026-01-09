@@ -2,11 +2,14 @@ package com.couse_enrollment_and_class_scheduling.controller;
 
 import com.couse_enrollment_and_class_scheduling.entity.Course;
 import com.couse_enrollment_and_class_scheduling.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -17,7 +20,6 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @Autowired
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
@@ -31,8 +33,12 @@ public class CourseController {
 
     // Show form to add a new course
     @GetMapping("/add")
-    public String showAddForm(Model model) {
+    public String showAddForm(
+            Model model,
+            @RequestParam(name = "returnToAdmin", defaultValue = "false") boolean returnToAdmin
+    ) {
         model.addAttribute("course", new Course());
+        model.addAttribute("returnToAdmin", returnToAdmin);
         return "courses/add"; // Thymeleaf template
     }
 
@@ -40,8 +46,10 @@ public class CourseController {
     @PostMapping("/add")
     public String addCourse(@Valid @ModelAttribute("course") Course course,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            @RequestParam(name = "returnToAdmin", defaultValue = "false") boolean returnToAdmin) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("returnToAdmin", returnToAdmin);
             return "courses/add";
         }
 
@@ -49,15 +57,16 @@ public class CourseController {
             courseService.addCourse(course);
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("returnToAdmin", returnToAdmin);
             return "courses/add";
         }
 
-        return "redirect:/courses";
+        return returnToAdmin ? "redirect:/admin/courses" : "redirect:/courses";
     }
 
     // Show form to edit a course
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable @NonNull Long id, Model model) {
         Course course = courseService.getCourseById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         model.addAttribute("course", course);
@@ -66,7 +75,7 @@ public class CourseController {
 
     // Handle edit course form submission
     @PostMapping("/edit/{id}")
-    public String updateCourse(@PathVariable Long id,
+    public String updateCourse(@PathVariable @NonNull Long id,
             @Valid @ModelAttribute("course") Course course,
             BindingResult bindingResult,
             Model model) {
@@ -86,8 +95,20 @@ public class CourseController {
 
     // Delete course
     @GetMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable Long id) {
-        courseService.deleteCourse(id);
+    public String deleteCourse(@PathVariable @NonNull Long id, RedirectAttributes redirectAttributes) {
+        try {
+            courseService.deleteCourse(id);
+            redirectAttributes.addFlashAttribute("success", "Course deleted successfully.");
+        } catch (EmptyResultDataAccessException ex) {
+            redirectAttributes.addFlashAttribute("error", "Course not found.");
+        } catch (DataIntegrityViolationException ex) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Cannot delete this course because it is referenced by other records (enrollments/schedules)."
+            );
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute("error", "Delete failed: " + ex.getMessage());
+        }
         return "redirect:/courses";
     }
 }

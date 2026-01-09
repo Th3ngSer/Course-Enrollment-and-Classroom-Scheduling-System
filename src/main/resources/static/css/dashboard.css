@@ -1,0 +1,291 @@
+/* Dashboard/Admin layout styles.
+   Uses the design tokens defined in /css/style.css (:root variables). */
+
+body.dashboard-page {
+  display: block;
+  min-height: 100vh;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Override global centered paragraph styling for dashboard pages */
+body.dashboard-page p {
+  text-align: left;
+  margin-top: 0;
+}
+
+/* Dashboard pages shouldn't force full-width primary buttons */
+body.dashboard-page .btn-primary,
+body.dashboard-page button[type="submit"] {
+  width: auto;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--text-primary);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.sidebar a {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 12px;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.sidebar a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.sidebar a.danger {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.sidebar a.danger:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.main-content {
+  padding: 28px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  margin: 8px 0 0 0;
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 24px;
+}
+
+.stat-card {
+  padding: 18px;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  margin: 10px 0 0 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.quick-actions {
+  padding: 18px;
+}
+
+.quick-actions h2 {
+  margin: 0 0 14px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+.quick-actions .actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Your global style.css sets .btn to width: 100% via .btn-primary,
+   so we override inside quick-actions to be natural-width buttons. */
+.quick-actions .btn {
+  width: auto;
+}
+
+/* Table + toolbar styling used across admin pages */
+.content-card {
+  padding: 18px;
+}
+
+.content-card h2 {
+  margin: 0 0 14px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 14px 0;
+}
+
+.toolbar .btn {
+  width: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.data-table thead th {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background: var(--bg-primary);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Button variants used in admin tables */
+body.dashboard-page .btn-sm {
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+body.dashboard-page .btn-warning {
+  background: var(--primary-light);
+  color: white;
+}
+
+body.dashboard-page .btn-warning:hover {
+  background: var(--primary-color);
+}
+
+body.dashboard-page .btn-danger {
+  background: var(--error-color);
+  color: white;
+}
+
+body.dashboard-page .btn-danger:hover {
+  filter: brightness(0.95);
+}
+
+/* Make alerts look correct on dashboard pages */
+.main-content .alert {
+  margin: 10px 0 18px;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .dashboard-container {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -8,6 +8,14 @@
     <div class="container">
       <h1>Classroom List</h1>
 
+      <div class="alert alert-success" th:if="${success}">
+        <span th:text="${success}"></span>
+      </div>
+
+      <div class="alert alert-error" th:if="${error}">
+        <span th:text="${error}"></span>
+      </div>
+
       <a th:href="@{/classrooms/add}" class="btn btn-primary"
         >➕ Add Classroom</a
       >
@@ -97,3 +105,4 @@
     </div>
   </body>
 </html>
+

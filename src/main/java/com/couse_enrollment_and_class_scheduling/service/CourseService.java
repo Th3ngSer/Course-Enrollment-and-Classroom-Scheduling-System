@@ -1,8 +1,9 @@
 package com.couse_enrollment_and_class_scheduling.service;
 
 import com.couse_enrollment_and_class_scheduling.entity.Course;
+import com.couse_enrollment_and_class_scheduling.entity.Lecturer;
 import com.couse_enrollment_and_class_scheduling.repository.CourseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,6 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
 
-    @Autowired
     public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
@@ -25,7 +25,7 @@ public class CourseService {
 
 
     // Find course by ID
-    public Optional<Course> getCourseById(Long id) {
+    public Optional<Course> getCourseById(@NonNull Long id) {
         return courseRepository.findById(id);
     }
 
@@ -46,7 +46,7 @@ public class CourseService {
 
 
     // Update existing course
-    public Course updateCourse(Long id, Course updatedCourse) {
+    public Course updateCourse(@NonNull Long id, Course updatedCourse) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + id));
 
@@ -68,7 +68,15 @@ public class CourseService {
 
 
     // Delete course
-    public void deleteCourse(Long id) {
+    public void deleteCourse(@NonNull Long id) {
         courseRepository.deleteById(id);
+    }
+
+    public Course assignLecturerToCourse(@NonNull Long courseId, Lecturer lecturer) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+
+        course.setLecturer(lecturer);
+        return courseRepository.save(course);
     }
 }

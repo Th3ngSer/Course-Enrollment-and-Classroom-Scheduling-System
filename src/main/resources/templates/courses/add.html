@@ -95,6 +95,7 @@
       <h2>Add New Course</h2>
 
       <form th:action="@{/courses/add}" th:object="${course}" method="post">
+        <input type="hidden" name="returnToAdmin" th:value="${returnToAdmin}" />
         <div class="form-group">
           <label>Course Code</label>
           <input type="text" th:field="*{courseCode}" placeholder="CS101" />
@@ -131,6 +132,16 @@
       </form>
 
       <a th:href="@{/courses}" class="back-link">← Back to Course List</a>
+      <a th:if="${returnToAdmin}" th:href="@{/admin/courses}" class="back-link"
+        >← Back to Admin Course Page</a
+      >
+      <a
+        th:if="${returnToAdmin}"
+        th:href="@{/admin/dashboard}"
+        class="back-link"
+        >← Back to Admin Dashboard</a
+      >
     </div>
   </body>
 </html>
+

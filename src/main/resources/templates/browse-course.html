@@ -1,75 +1,107 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Available Class Schedule</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="container mt-5">
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Available Class Schedule</h2>
-        <a href="/my-courses/1" class="btn btn-outline-primary">My Enrolled Courses</a>
+      <h2>Available Class Schedule</h2>
+      <div class="d-flex gap-2">
+        <a href="/student/dashboard" class="btn btn-outline-secondary"
+          >Back to Dashboard</a
+        >
+        <a href="/my-courses" class="btn btn-outline-primary"
+          >My Enrolled Courses</a
+        >
+      </div>
     </div>
 
-    <div th:if="${courses == null || #lists.isEmpty(courses)}" class="alert alert-warning">
-        No courses available at the moment.
+    <div
+      th:if="${courses == null || #lists.isEmpty(courses)}"
+      class="alert alert-warning"
+    >
+      No courses available at the moment.
     </div>
 
-    <table th:unless="${courses == null || #lists.isEmpty(courses)}" class="table table-striped mt-3">
-        <thead class="table-dark">
-            <tr>
-                <th>Course Name</th>
-                <th>Lecturer</th>
-                <th>Capacity</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="course : ${courses}">
-                <td th:text="${course.courseName}">Course Name</td>
-                <td th:text="${course.lecturer != null ? course.lecturer.fullName : 'TBA'}">Lecturer</td>
-                <td th:text="${course.currentStudents != null ? course.currentStudents : 0} + '/' + ${course.capacity}">0/30</td>
-                <td>
-                    <span th:if="${course.currentStudents != null && course.currentStudents >= course.capacity}" class="badge bg-danger">Full</span>
-                    <span th:unless="${course.currentStudents != null && course.currentStudents >= course.capacity}" class="badge bg-success">Available</span>
-                </td>
-                <td>
-                    <button class="btn btn-primary btn-sm" 
-                            th:attr="onclick='enrollStudent(' + ${course.id} + ')'"
-                            th:disabled="${course.currentStudents != null && course.currentStudents >= course.capacity}">
-                        Enroll
-                    </button>
-                </td>
-            </tr>
-        </tbody>
+    <table
+      th:unless="${courses == null || #lists.isEmpty(courses)}"
+      class="table table-striped mt-3"
+    >
+      <thead class="table-dark">
+        <tr>
+          <th>Course Name</th>
+          <th>Lecturer</th>
+          <th>Capacity</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="course : ${courses}">
+          <td th:text="${course.courseName}">Course Name</td>
+          <td
+            th:text="${course.lecturer != null ? course.lecturer.fullName : 'TBA'}"
+          >
+            Lecturer
+          </td>
+          <td
+            th:text="${course.currentStudents != null ? course.currentStudents : 0} + '/' + ${course.capacity}"
+          >
+            0/30
+          </td>
+          <td>
+            <span
+              th:if="${course.currentStudents != null && course.currentStudents >= course.capacity}"
+              class="badge bg-danger"
+              >Full</span
+            >
+            <span
+              th:unless="${course.currentStudents != null && course.currentStudents >= course.capacity}"
+              class="badge bg-success"
+              >Available</span
+            >
+          </td>
+          <td>
+            <button
+              class="btn btn-primary btn-sm"
+              th:attr="onclick='enrollStudent(' + ${course.id} + ')'"
+              th:disabled="${course.currentStudents != null && course.currentStudents >= course.capacity}"
+            >
+              Enroll
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     <script>
-        function enrollStudent(courseId) {
-            const studentId = 1; 
-
-            fetch('/api/enrollments/enroll', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ studentId: studentId, courseId: courseId })
-            })
-            .then(async response => {
-                const text = await response.text();
-                if (response.ok) {
-                    alert("Success: " + text);
-                    location.reload(); 
-                } else {
-                    alert("Error: " + text);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Connection error. Is the server running?');
-            });
-        }
+      function enrollStudent(courseId) {
+        fetch("/api/enrollments/enroll", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseId: courseId }),
+        })
+          .then(async (response) => {
+            const text = await response.text();
+            if (response.ok) {
+              alert("Enroll success");
+              location.reload();
+            } else {
+              alert("Error: " + text);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Connection error. Is the server running?");
+          });
+      }
     </script>
-</body>
+  </body>
 </html>
+

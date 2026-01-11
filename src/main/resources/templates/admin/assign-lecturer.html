@@ -14,6 +14,7 @@
         <a href="/admin/courses">Manage Courses</a>
         <a href="/admin/lecturers" class="active">Manage Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -38,6 +39,12 @@
 
         <div class="content-card card">
           <form action="/admin/lecturers/assign" method="post">
+            <input
+              type="hidden"
+              th:if="${_csrf != null}"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
             <div style="display: grid; gap: 12px; max-width: 520px">
               <div>
                 <label for="courseId">Course</label>

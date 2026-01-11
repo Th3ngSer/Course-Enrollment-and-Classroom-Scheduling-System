@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Lecturer Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="app-page">
     <div class="container">
-        <div class="dashboard-box">
-            <h1>Welcome, Lecturer!</h1>
-            <div th:if="${param.roleNotAllowed}" class="alert alert-error">Requested role is not permitted — redirected to your default dashboard.</div>
-            <p>Username: <span th:text="${username}"></span></p>
-            
-            <div class="actions">
-                <a href="/lecturer/courses" class="btn btn-primary">My Courses</a>
-                <a href="/lecturer/students" class="btn btn-primary">Student Lists</a>
-                <a href="/logout" class="btn btn-secondary">Logout</a>
-            </div>
+      <div class="card">
+        <h1 class="page-title">Welcome, Lecturer!</h1>
+        <div th:if="${param.roleNotAllowed}" class="alert alert-error">
+          Requested role is not permitted — redirected to your default
+          dashboard.
         </div>
+        <p>Username: <span th:text="${username}"></span></p>
+
+        <div class="actions">
+          <a href="/lecturer/courses" class="btn btn-primary btn-inline"
+            >My Courses</a
+          >
+          <a href="/lecturer/students" class="btn btn-primary btn-inline"
+            >Student Lists</a
+          >
+          <a href="/logout" class="btn btn-secondary btn-inline">Logout</a>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

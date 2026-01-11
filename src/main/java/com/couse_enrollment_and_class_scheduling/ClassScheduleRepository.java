@@ -71,4 +71,6 @@ public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Lo
      */
     List<ClassSchedule> findByCourseId(Long courseId);
 
+        long deleteByCourse_Id(Long courseId);
+
 }

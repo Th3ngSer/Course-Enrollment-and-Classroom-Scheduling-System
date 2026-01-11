@@ -3,10 +3,10 @@ package com.couse_enrollment_and_class_scheduling.controller;
 import com.couse_enrollment_and_class_scheduling.service.CourseService;
 import com.couse_enrollment_and_class_scheduling.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ViewCourseScheduleController {
@@ -27,9 +27,13 @@ public class ViewCourseScheduleController {
         return "/browse-course"; // Looks for templates/browse-available-course.html
     }
 
-    @GetMapping("/my-courses/{studentId}")
-    public String showMyCourses(@PathVariable Long studentId, Model model) {
-        model.addAttribute("myEnrollments", enrollmentService.getStudentSchedule(studentId));
+    @GetMapping("/my-courses")
+    public String showMyCourses(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("myEnrollments", enrollmentService.getStudentScheduleByUsername(authentication.getName()));
         return "my-course"; // FIXED: Changed from "my-courses" to "my-course"
     }
 }

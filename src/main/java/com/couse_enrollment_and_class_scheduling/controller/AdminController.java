@@ -2,10 +2,14 @@ package com.couse_enrollment_and_class_scheduling.controller;
 
 import com.couse_enrollment_and_class_scheduling.entity.Course;
 import com.couse_enrollment_and_class_scheduling.entity.Classroom;
+import com.couse_enrollment_and_class_scheduling.entity.ClassSchedule;
 import com.couse_enrollment_and_class_scheduling.entity.Lecturer;
+import com.couse_enrollment_and_class_scheduling.entity.Role;
 import com.couse_enrollment_and_class_scheduling.entity.User;
+import com.couse_enrollment_and_class_scheduling.repository.RoleRepository;
 import com.couse_enrollment_and_class_scheduling.repository.UserRepository;
 import com.couse_enrollment_and_class_scheduling.service.ClassroomService;
+import com.couse_enrollment_and_class_scheduling.service.ClassScheduleService;
 import com.couse_enrollment_and_class_scheduling.service.CourseService;
 import com.couse_enrollment_and_class_scheduling.service.LecturerService;
 import jakarta.validation.Valid;
@@ -14,6 +18,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +30,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
@@ -33,18 +46,34 @@ public class AdminController {
     private final CourseService courseService;
     private final LecturerService lecturerService;
     private final ClassroomService classroomService;
+    private final ClassScheduleService classScheduleService;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AdminController(
             CourseService courseService,
             LecturerService lecturerService,
             ClassroomService classroomService,
-            UserRepository userRepository
+            ClassScheduleService classScheduleService,
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder
     ) {
         this.courseService = courseService;
         this.lecturerService = lecturerService;
         this.classroomService = classroomService;
+        this.classScheduleService = classScheduleService;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    private static boolean hasRole(User user, String roleName) {
+        if (user == null || user.getRoles() == null) {
+            return false;
+        }
+        return user.getRoles().stream().anyMatch(r -> roleName.equals(r.getName()));
     }
 
     @GetMapping("/dashboard")
@@ -120,6 +149,20 @@ public class AdminController {
     @GetMapping("/lecturers")
     public String manageLecturers(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
+
+        List<Lecturer> lecturers = lecturerService.getAllLecturers();
+        List<Course> courses = courseService.getAllCourses();
+        Map<Long, String> lecturerCourses = lecturers.stream().collect(Collectors.toMap(
+                Lecturer::getId,
+                lecturer -> courses.stream()
+                        .filter(c -> c.getLecturer() != null && c.getLecturer().getId().equals(lecturer.getId()))
+                        .map(Course::getCourseCode)
+                        .sorted()
+                        .collect(Collectors.joining(", "))
+        ));
+
+        model.addAttribute("lecturers", lecturers);
+        model.addAttribute("lecturerCourses", lecturerCourses);
         return "admin/lecturers";
     }
 
@@ -160,6 +203,74 @@ public class AdminController {
         model.addAttribute("classroom", new Classroom());
         model.addAttribute("showCreate", showCreate);
         return "admin/classrooms";
+    }
+
+    @GetMapping("/schedules")
+    public String manageSchedules(
+            Model model,
+            Authentication authentication,
+            @RequestParam(name = "showCreate", defaultValue = "false") boolean showCreate
+    ) {
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("schedules", classScheduleService.getAllSchedules());
+        model.addAttribute("courses", courseService.getAllCourses());
+        model.addAttribute("classrooms", classroomService.getAllClassrooms());
+        model.addAttribute("showCreate", showCreate);
+        return "admin/schedules";
+    }
+
+    @PostMapping("/schedules/create")
+    public String createSchedule(
+            @RequestParam @NonNull Long courseId,
+            @RequestParam @NonNull Long classroomId,
+            @RequestParam @NonNull String dayOfWeek,
+            @RequestParam @NonNull String startTime,
+            @RequestParam @NonNull String endTime,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            Course course = courseService.getCourseById(courseId)
+                    .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+            Classroom classroom = classroomService.getClassroomById(classroomId)
+                    .orElseThrow(() -> new IllegalArgumentException("Classroom not found with id: " + classroomId));
+
+            DayOfWeek day = DayOfWeek.valueOf(dayOfWeek);
+            LocalTime start = LocalTime.parse(startTime);
+            LocalTime end = LocalTime.parse(endTime);
+
+            if (!start.isBefore(end)) {
+                throw new IllegalArgumentException("Start time must be before end time");
+            }
+
+            ClassSchedule schedule = new ClassSchedule();
+            schedule.setCourse(course);
+            schedule.setClassroom(classroom);
+            schedule.setDayOfWeek(day);
+            schedule.setStartTime(start);
+            schedule.setEndTime(end);
+
+            classScheduleService.addSchedule(schedule);
+            redirectAttributes.addFlashAttribute("success", "Schedule created successfully!");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/admin/schedules?showCreate=true#create-schedule";
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute("error", "Create failed: " + ex.getMessage());
+            return "redirect:/admin/schedules?showCreate=true#create-schedule";
+        }
+
+        return "redirect:/admin/schedules";
+    }
+
+    @PostMapping("/schedules/delete/{id}")
+    public String deleteSchedule(@PathVariable @NonNull Long id, RedirectAttributes redirectAttributes) {
+        try {
+            classScheduleService.deleteSchedule(id);
+            redirectAttributes.addFlashAttribute("success", "Schedule deleted successfully.");
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute("error", "Delete failed: " + ex.getMessage());
+        }
+        return "redirect:/admin/schedules";
     }
 
     @GetMapping("/classrooms/add")
@@ -218,14 +329,83 @@ public class AdminController {
     @GetMapping("/users")
     public String manageUsers(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("users", userRepository.findAll());
+
+        List<User> allUsers = userRepository.findAll();
+        List<User> adminUsers = allUsers.stream()
+            .filter(u -> hasRole(u, "ROLE_ADMIN"))
+            .toList();
+        List<User> lecturerUsers = allUsers.stream()
+            .filter(u -> !hasRole(u, "ROLE_ADMIN") && hasRole(u, "ROLE_LECTURER"))
+            .toList();
+        List<User> studentUsers = allUsers.stream()
+            .filter(u -> !hasRole(u, "ROLE_ADMIN") && !hasRole(u, "ROLE_LECTURER"))
+            .toList();
+
+        model.addAttribute("adminUsers", adminUsers);
+        model.addAttribute("lecturerUsers", lecturerUsers);
+        model.addAttribute("studentUsers", studentUsers);
         return "admin/users";
     }
 
     @GetMapping("/users/create")
     public String createUserForm(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
+        model.addAttribute("user", new User());
         return "admin/create-user";
+    }
+
+    @PostMapping("/users/create")
+    public String createUser(
+            @Valid @ModelAttribute("user") User user,
+            BindingResult bindingResult,
+            @RequestParam(name = "role", required = false, defaultValue = "ROLE_STUDENT") String roleName,
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        model.addAttribute("username", authentication.getName());
+
+        if (bindingResult.hasErrors()) {
+            return "admin/create-user";
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            bindingResult.rejectValue("username", "error.user", "Username already exists");
+            return "admin/create-user";
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            bindingResult.rejectValue("email", "error.user", "Email already registered");
+            return "admin/create-user";
+        }
+
+        if (roleName == null || roleName.isBlank()) {
+            roleName = "ROLE_STUDENT";
+        }
+        if (!roleName.equals("ROLE_STUDENT") && !roleName.equals("ROLE_LECTURER") && !roleName.equals("ROLE_ADMIN")) {
+            model.addAttribute("error", "Invalid role selected");
+            return "admin/create-user";
+        }
+
+        Optional<Role> selectedRole = roleRepository.findByName(roleName);
+        if (selectedRole.isEmpty()) {
+            model.addAttribute("error", "System error: Selected role not found");
+            return "admin/create-user";
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        user.setRoles(new HashSet<>());
+        user.getRoles().add(selectedRole.get());
+
+        try {
+            userRepository.save(user);
+            redirectAttributes.addFlashAttribute("success", "User created successfully.");
+            return "redirect:/admin/users";
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", "Create failed: " + ex.getMessage());
+            return "admin/create-user";
+        }
     }
 
     @PostMapping("/users/{id}/toggle")

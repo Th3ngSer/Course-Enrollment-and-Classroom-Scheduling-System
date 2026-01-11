@@ -40,4 +40,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
         ORDER BY e.enrollmentDate
     """)
     List<Enrollment> findByCourseId(@Param("courseId") Long courseId);
+
+    long deleteByCourse_Id(Long courseId);
 }

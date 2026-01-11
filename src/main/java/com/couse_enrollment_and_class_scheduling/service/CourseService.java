@@ -2,9 +2,12 @@ package com.couse_enrollment_and_class_scheduling.service;
 
 import com.couse_enrollment_and_class_scheduling.entity.Course;
 import com.couse_enrollment_and_class_scheduling.entity.Lecturer;
+import com.couse_enrollment_and_class_scheduling.ClassScheduleRepository;
+import com.couse_enrollment_and_class_scheduling.EnrollmentRepository;
 import com.couse_enrollment_and_class_scheduling.repository.CourseRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,17 @@ import java.util.Optional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final ClassScheduleRepository classScheduleRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(
+            CourseRepository courseRepository,
+            EnrollmentRepository enrollmentRepository,
+            ClassScheduleRepository classScheduleRepository
+    ) {
         this.courseRepository = courseRepository;
+        this.enrollmentRepository = enrollmentRepository;
+        this.classScheduleRepository = classScheduleRepository;
     }
 
     // List all courses
@@ -68,7 +79,11 @@ public class CourseService {
 
 
     // Delete course
+    @Transactional
     public void deleteCourse(@NonNull Long id) {
+        // Remove dependents first to satisfy FK constraints
+        classScheduleRepository.deleteByCourse_Id(id);
+        enrollmentRepository.deleteByCourse_Id(id);
         courseRepository.deleteById(id);
     }
 

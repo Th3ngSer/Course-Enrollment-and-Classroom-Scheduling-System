@@ -9,6 +9,62 @@ body.dashboard-page {
   color: var(--text-primary);
 }
 
+/* Centered simple dashboards (e.g., student landing page) */
+body.dashboard-page.dashboard-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+}
+
+body.dashboard-page.dashboard-centered .container {
+  max-width: 720px;
+}
+
+body.dashboard-page.dashboard-centered .dashboard-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 28px;
+}
+
+body.dashboard-page.dashboard-centered .dashboard-box h1 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+body.dashboard-page.dashboard-centered .dashboard-username {
+  margin: 0;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+body.dashboard-page.dashboard-centered .actions {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.dashboard-page.dashboard-centered .actions .btn {
+  width: 100%;
+}
+
+body.dashboard-page.dashboard-centered .actions .btn-secondary {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 520px) {
+  body.dashboard-page.dashboard-centered .actions {
+    grid-template-columns: 1fr;
+  }
+
+  body.dashboard-page.dashboard-centered .actions .btn-secondary {
+    grid-column: auto;
+  }
+}
+
 /* Override global centered paragraph styling for dashboard pages */
 body.dashboard-page p {
   text-align: left;

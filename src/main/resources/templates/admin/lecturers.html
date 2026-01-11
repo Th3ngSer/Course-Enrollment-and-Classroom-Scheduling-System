@@ -26,7 +26,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">
@@ -39,16 +39,18 @@
 
         <div class="content-card card">
           <div class="toolbar">
-            <h2>Assign Lecturer to Course</h2>
-            <a href="/admin/lecturers/assign" class="btn btn-primary"
-              >Assign Lecturer to Course</a
-            >
+            <h2>Lecturers</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap">
+              <a href="/admin/lecturers/assign" class="btn btn-primary"
+                >Assign Lecturer to Course</a
+              >
+            </div>
           </div>
 
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>No.</th>
                 <th>Name</th>
                 <th>Department</th>
                 <th>Office Hours</th>
@@ -62,8 +64,8 @@
                 </td>
               </tr>
 
-              <tr th:each="l : ${lecturers}">
-                <td th:text="${l.id}"></td>
+              <tr th:each="l, stat : ${lecturers}">
+                <td th:text="${stat.count}"></td>
                 <td th:text="${l.fullName}"></td>
                 <td th:text="${l.department}"></td>
                 <td

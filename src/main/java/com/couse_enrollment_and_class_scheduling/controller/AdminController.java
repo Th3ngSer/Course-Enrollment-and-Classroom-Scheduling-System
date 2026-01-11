@@ -6,6 +6,7 @@ import com.couse_enrollment_and_class_scheduling.entity.ClassSchedule;
 import com.couse_enrollment_and_class_scheduling.entity.Lecturer;
 import com.couse_enrollment_and_class_scheduling.entity.Role;
 import com.couse_enrollment_and_class_scheduling.entity.User;
+import com.couse_enrollment_and_class_scheduling.repository.CourseRepository;
 import com.couse_enrollment_and_class_scheduling.repository.RoleRepository;
 import com.couse_enrollment_and_class_scheduling.repository.UserRepository;
 import com.couse_enrollment_and_class_scheduling.service.ClassroomService;
@@ -20,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -47,6 +49,7 @@ public class AdminController {
     private final LecturerService lecturerService;
     private final ClassroomService classroomService;
     private final ClassScheduleService classScheduleService;
+    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,6 +59,7 @@ public class AdminController {
             LecturerService lecturerService,
             ClassroomService classroomService,
             ClassScheduleService classScheduleService,
+            CourseRepository courseRepository,
             UserRepository userRepository,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder
@@ -64,6 +68,7 @@ public class AdminController {
         this.lecturerService = lecturerService;
         this.classroomService = classroomService;
         this.classScheduleService = classScheduleService;
+        this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -79,6 +84,11 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String adminDashboard(Authentication authentication, Model model) {
         model.addAttribute("username", authentication.getName());
+
+        model.addAttribute("totalCourses", courseRepository.count());
+        model.addAttribute("activeLecturers", userRepository.countEnabledLecturersNonAdmin());
+        model.addAttribute("registeredStudents", userRepository.countEnabledStudentsOnly());
+
         return "admin/dashboard";
     }
 
@@ -150,8 +160,21 @@ public class AdminController {
     public String manageLecturers(Model model, Authentication authentication) {
         model.addAttribute("username", authentication.getName());
 
-        List<Lecturer> lecturers = lecturerService.getAllLecturers();
         List<Course> courses = courseService.getAllCourses();
+
+        // Only show lecturer profiles that are actually usable:
+        // - linked to a login user, OR
+        // - currently assigned to a course.
+        var assignedLecturerIds = courses.stream()
+            .map(Course::getLecturer)
+            .filter(l -> l != null && l.getId() != null)
+            .map(Lecturer::getId)
+            .collect(java.util.stream.Collectors.toSet());
+
+        List<Lecturer> lecturers = lecturerService.getAllLecturers().stream()
+            .filter(l -> l.getUser() != null || assignedLecturerIds.contains(l.getId()))
+            .toList();
+
         Map<Long, String> lecturerCourses = lecturers.stream().collect(Collectors.toMap(
                 Lecturer::getId,
                 lecturer -> courses.stream()
@@ -190,6 +213,91 @@ public class AdminController {
         }
 
         return "redirect:/admin/lecturers";
+    }
+
+    // --- LECTURER MANAGEMENT (Missing Logic) ---
+
+    @GetMapping("/lecturers/add")
+    public String addLecturerForm(Model model, Authentication authentication) {
+        return "redirect:/admin/users/create";
+    }
+
+    @PostMapping("/lecturers/create")
+    public String createLecturer(
+            @Valid @ModelAttribute("lecturerForm") AdminLecturerCreateForm lecturerForm,
+            BindingResult bindingResult,
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute("error", "Please create lecturers from User Management.");
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/lecturers/edit/{id}")
+    public String editLecturerForm(@PathVariable Long id, Model model, Authentication authentication) {
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/lecturers/update/{id}")
+    public String updateLecturer(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("lecturer") Lecturer updatedLecturer,
+            BindingResult bindingResult,
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute("error", "Lecturer profile editing is managed via User Management.");
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/lecturers/delete/{id}")
+    public String deleteLecturer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", "Please manage lecturer accounts from User Management.");
+        return "redirect:/admin/users";
+    }
+
+    // --- COURSE EDITING (Missing Logic) ---
+
+    @GetMapping("/courses/edit/{id}")
+    public String editCourseForm(@PathVariable @NonNull Long id, Model model, Authentication authentication, RedirectAttributes redirectAttributes) {
+        model.addAttribute("username", authentication.getName());
+
+        return courseService.getCourseById(id)
+                .map(course -> {
+                    model.addAttribute("course", course);
+                    return "admin/edit-course";
+                })
+                .orElseGet(() -> {
+                    redirectAttributes.addFlashAttribute("error", "Course not found.");
+                    return "redirect:/admin/courses";
+                });
+    }
+
+    @PostMapping("/courses/update/{id}")
+        public String updateCourse(
+            @PathVariable @NonNull Long id,
+            @Valid @ModelAttribute("course") Course course,
+            BindingResult bindingResult,
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        model.addAttribute("username", authentication.getName());
+
+        if (bindingResult.hasErrors()) {
+            return "admin/edit-course";
+        }
+
+        try {
+            courseService.updateCourse(id, course);
+            redirectAttributes.addFlashAttribute("success", "Course updated successfully!");
+            return "redirect:/admin/courses";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Error updating course: " + e.getMessage());
+            return "admin/edit-course";
+        }
     }
 
     @GetMapping("/classrooms")
@@ -344,6 +452,15 @@ public class AdminController {
         model.addAttribute("adminUsers", adminUsers);
         model.addAttribute("lecturerUsers", lecturerUsers);
         model.addAttribute("studentUsers", studentUsers);
+
+        Map<Long, String> roleDisplay = allUsers.stream().collect(Collectors.toMap(
+            User::getId,
+            u -> u.getRoles().stream()
+                .map(Role::getName)
+                .map(name -> name != null && name.startsWith("ROLE_") ? name.substring("ROLE_".length()) : name)
+                .collect(Collectors.joining(", "))
+        ));
+        model.addAttribute("roleDisplay", roleDisplay);
         return "admin/users";
     }
 
@@ -355,10 +472,13 @@ public class AdminController {
     }
 
     @PostMapping("/users/create")
+        @Transactional
     public String createUser(
             @Valid @ModelAttribute("user") User user,
             BindingResult bindingResult,
             @RequestParam(name = "role", required = false, defaultValue = "ROLE_STUDENT") String roleName,
+            @RequestParam(name = "department", required = false) String department,
+            @RequestParam(name = "officeHours", required = false) String officeHours,
             Model model,
             Authentication authentication,
             RedirectAttributes redirectAttributes
@@ -393,19 +513,153 @@ public class AdminController {
             return "admin/create-user";
         }
 
+        if ("ROLE_LECTURER".equals(roleName)) {
+            if (department == null || department.isBlank()) {
+                model.addAttribute("error", "Department is required for Lecturer accounts");
+                return "admin/create-user";
+            }
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setRoles(new HashSet<>());
         user.getRoles().add(selectedRole.get());
 
         try {
-            userRepository.save(user);
+            User savedUser = userRepository.save(user);
+
+            if ("ROLE_LECTURER".equals(roleName)) {
+                String fullName = (user.getFirstName() + " " + user.getLastName()).trim();
+                Lecturer lecturer = (!fullName.isBlank())
+                    ? lecturerService.findUnlinkedByFullName(fullName).orElseGet(Lecturer::new)
+                    : new Lecturer();
+                lecturer.setFullName(fullName);
+                lecturer.setDepartment(department.trim());
+                lecturer.setOfficeHours(officeHours == null ? null : officeHours.trim());
+                lecturer.setUser(savedUser);
+                lecturerService.saveLecturer(lecturer);
+            }
+
             redirectAttributes.addFlashAttribute("success", "User created successfully.");
             return "redirect:/admin/users";
         } catch (RuntimeException ex) {
             model.addAttribute("error", "Create failed: " + ex.getMessage());
             return "admin/create-user";
         }
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String editUserForm(@PathVariable @NonNull Long id, Model model, Authentication authentication, RedirectAttributes redirectAttributes) {
+        model.addAttribute("username", authentication.getName());
+
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "User not found.");
+            return "redirect:/admin/users";
+        }
+
+        User user = userOpt.get();
+        AdminUserEditForm form = new AdminUserEditForm();
+        form.setEmail(user.getEmail());
+        form.setFirstName(user.getFirstName());
+        form.setLastName(user.getLastName());
+
+        boolean isLecturer = hasRole(user, "ROLE_LECTURER") && !hasRole(user, "ROLE_ADMIN");
+        model.addAttribute("isLecturer", isLecturer);
+
+        if (isLecturer) {
+            Long userId = user.getId();
+            if (userId != null) {
+                lecturerService.findByUserId(userId).ifPresent(lecturer -> {
+                    form.setDepartment(lecturer.getDepartment());
+                    form.setOfficeHours(lecturer.getOfficeHours());
+                });
+            }
+        }
+
+        model.addAttribute("editUser", user);
+        model.addAttribute("editForm", form);
+        return "admin/edit-user";
+    }
+
+    @PostMapping("/users/update/{id}")
+    @Transactional
+    public String updateUser(
+            @PathVariable @NonNull Long id,
+            @Valid @ModelAttribute("editForm") AdminUserEditForm editForm,
+            BindingResult bindingResult,
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        model.addAttribute("username", authentication.getName());
+
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "User not found.");
+            return "redirect:/admin/users";
+        }
+
+        User user = userOpt.get();
+        boolean isLecturer = hasRole(user, "ROLE_LECTURER") && !hasRole(user, "ROLE_ADMIN");
+        model.addAttribute("isLecturer", isLecturer);
+        model.addAttribute("editUser", user);
+
+        if (bindingResult.hasErrors()) {
+            return "admin/edit-user";
+        }
+
+        if (isLecturer) {
+            if (editForm.getDepartment() == null || editForm.getDepartment().isBlank()) {
+                model.addAttribute("error", "Department is required for Lecturer accounts");
+                return "admin/edit-user";
+            }
+        }
+
+        userRepository.findByEmail(editForm.getEmail()).ifPresent(existing -> {
+            if (!existing.getId().equals(user.getId())) {
+                bindingResult.rejectValue("email", "email.exists", "Email already registered");
+            }
+        });
+        if (bindingResult.hasErrors()) {
+            return "admin/edit-user";
+        }
+
+        user.setEmail(editForm.getEmail());
+        user.setFirstName(editForm.getFirstName());
+        user.setLastName(editForm.getLastName());
+
+        if (editForm.getPassword() != null && !editForm.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(editForm.getPassword()));
+        }
+
+        userRepository.save(user);
+
+        if (isLecturer) {
+            String fullName = (user.getFirstName() + " " + user.getLastName()).trim();
+            Lecturer lecturer;
+            Long userId = user.getId();
+            if (userId != null) {
+                lecturer = lecturerService.findByUserId(userId).orElseGet(() -> {
+                    if (!fullName.isBlank()) {
+                        return lecturerService.findUnlinkedByFullName(fullName).orElseGet(Lecturer::new);
+                    }
+                    return new Lecturer();
+                });
+            } else {
+                lecturer = (!fullName.isBlank())
+                        ? lecturerService.findUnlinkedByFullName(fullName).orElseGet(Lecturer::new)
+                        : new Lecturer();
+            }
+            lecturer.setFullName((user.getFirstName() + " " + user.getLastName()).trim());
+            lecturer.setDepartment(editForm.getDepartment().trim());
+            lecturer.setOfficeHours(editForm.getOfficeHours() == null ? null : editForm.getOfficeHours().trim());
+            lecturer.setUser(user);
+            lecturerService.saveLecturer(lecturer);
+        }
+
+        redirectAttributes.addFlashAttribute("success", "User updated successfully.");
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/users/{id}/toggle")

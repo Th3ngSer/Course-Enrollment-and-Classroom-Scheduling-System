@@ -27,7 +27,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">
@@ -173,8 +173,9 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>No.</th>
                 <th>Course</th>
+                <th>Lecturer</th>
                 <th>Classroom</th>
                 <th>Day</th>
                 <th>Start</th>
@@ -184,15 +185,18 @@
             </thead>
             <tbody>
               <tr th:if="${#lists.isEmpty(schedules)}">
-                <td colspan="7" style="text-align: center; padding: 18px">
+                <td colspan="8" style="text-align: center; padding: 18px">
                   No schedules found yet.
                 </td>
               </tr>
 
-              <tr th:each="s : ${schedules}">
-                <td th:text="${s.id}"></td>
+              <tr th:each="s, stat : ${schedules}">
+                <td th:text="${stat.count}"></td>
                 <td
                   th:text="${s.course != null ? (s.course.courseCode + ' - ' + s.course.courseName) : '—'}"
+                ></td>
+                <td
+                  th:text="${s.course != null && s.course.lecturer != null ? s.course.lecturer.fullName : '—'}"
                 ></td>
                 <td
                   th:text="${s.classroom != null ? (s.classroom.building + ' ' + s.classroom.roomNumber) : '—'}"

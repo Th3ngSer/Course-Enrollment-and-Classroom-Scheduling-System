@@ -22,6 +22,10 @@ public class Lecturer {
     @Column(name = "office_hours", length = 100)
     private String officeHours;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
     // Constructors
     public Lecturer() {
     }
@@ -63,6 +67,14 @@ public class Lecturer {
 
     public void setOfficeHours(String officeHours) {
         this.officeHours = officeHours;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 

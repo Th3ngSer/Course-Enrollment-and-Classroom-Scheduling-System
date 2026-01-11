@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Create User - Admin</title>
+    <title>Add Lecturer - Admin</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
   </head>
@@ -12,17 +12,17 @@
         <h3>Admin Panel</h3>
         <a href="/admin/dashboard">Dashboard</a>
         <a href="/admin/courses">Manage Courses</a>
-        <a href="/admin/lecturers">Manage Lecturers</a>
+        <a href="/admin/lecturers" class="active">Manage Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
         <a href="/admin/schedules">Manage Schedules</a>
-        <a href="/admin/users" class="active">User Management</a>
+        <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
 
       <div class="main-content">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Create User</h1>
+            <h1 class="page-title">Add Lecturer</h1>
             <p class="page-subtitle">
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
@@ -36,8 +36,8 @@
 
         <div class="content-card card">
           <form
-            th:action="@{/admin/users/create}"
-            th:object="${user}"
+            th:action="@{/admin/lecturers/create}"
+            th:object="${lecturerForm}"
             method="post"
           >
             <input
@@ -47,13 +47,7 @@
               th:value="${_csrf.token}"
             />
 
-            <div
-              style="
-                display: grid;
-                gap: 12px;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-              "
-            >
+            <div style="display: grid; gap: 12px; max-width: 520px">
               <div>
                 <label>Username</label>
                 <input
@@ -85,41 +79,12 @@
               </div>
 
               <div>
-                <label>First Name</label>
-                <input
-                  class="form-control"
-                  type="text"
-                  th:field="*{firstName}"
-                  required
-                />
-                <div
-                  class="error"
-                  th:if="${#fields.hasErrors('firstName')}"
-                  th:errors="*{firstName}"
-                ></div>
-              </div>
-
-              <div>
-                <label>Last Name</label>
-                <input
-                  class="form-control"
-                  type="text"
-                  th:field="*{lastName}"
-                  required
-                />
-                <div
-                  class="error"
-                  th:if="${#fields.hasErrors('lastName')}"
-                  th:errors="*{lastName}"
-                ></div>
-              </div>
-
-              <div>
                 <label>Password</label>
                 <input
                   class="form-control"
                   type="password"
                   th:field="*{password}"
+                  minlength="6"
                   required
                 />
                 <div
@@ -130,35 +95,55 @@
               </div>
 
               <div>
-                <label>Role</label>
-                <select class="form-control" name="role">
-                  <option value="ROLE_STUDENT">Student</option>
-                  <option value="ROLE_LECTURER">Lecturer</option>
-                  <option value="ROLE_ADMIN">Administrator</option>
-                </select>
+                <label>Full Name</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{fullName}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('fullName')}"
+                  th:errors="*{fullName}"
+                ></div>
               </div>
 
               <div>
-                <label>Department (Lecturer only)</label>
-                <input class="form-control" type="text" name="department" />
+                <label>Department</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{department}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('department')}"
+                  th:errors="*{department}"
+                ></div>
               </div>
 
               <div>
-                <label>Office Hours (Lecturer only)</label>
-                <input class="form-control" type="text" name="officeHours" />
+                <label>Office Hours</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{officeHours}"
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('officeHours')}"
+                  th:errors="*{officeHours}"
+                ></div>
               </div>
-            </div>
 
-            <div
-              style="
-                margin-top: 14px;
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-              "
-            >
-              <a href="/admin/users" class="btn">Back to User Management</a>
-              <button type="submit" class="btn btn-primary">Create User</button>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                <a href="/admin/lecturers" class="btn">Back</a>
+                <button type="submit" class="btn btn-primary">
+                  Save Lecturer
+                </button>
+              </div>
             </div>
           </form>
         </div>

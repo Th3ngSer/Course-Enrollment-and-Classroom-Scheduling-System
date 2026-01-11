@@ -26,7 +26,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">
@@ -67,7 +67,7 @@
                 <td th:text="${u.username}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.firstName + ' ' + u.lastName}"></td>
-                <td th:text="${#strings.listJoin(u.roles.![name], ', ')}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
                 <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
                 <td class="action-buttons">
                   <span th:if="${u.username == username}">Current</span>
@@ -136,9 +136,15 @@
                 <td th:text="${u.username}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.firstName + ' ' + u.lastName}"></td>
-                <td th:text="${#strings.listJoin(u.roles.![name], ', ')}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
                 <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
                 <td class="action-buttons">
+                  <a
+                    th:href="@{/admin/users/edit/{id}(id=${u.id})}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+
                   <form
                     th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
                     method="post"
@@ -201,9 +207,15 @@
                 <td th:text="${u.username}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.firstName + ' ' + u.lastName}"></td>
-                <td th:text="${#strings.listJoin(u.roles.![name], ', ')}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
                 <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
                 <td class="action-buttons">
+                  <a
+                    th:href="@{/admin/users/edit/{id}(id=${u.id})}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+
                   <form
                     th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
                     method="post"

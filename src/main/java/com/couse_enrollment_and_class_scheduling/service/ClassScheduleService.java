@@ -3,7 +3,7 @@ package com.couse_enrollment_and_class_scheduling.service;
 import com.couse_enrollment_and_class_scheduling.entity.ClassSchedule;
 import com.couse_enrollment_and_class_scheduling.ClassScheduleRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,6 @@ public class ClassScheduleService {
 
     private final ClassScheduleRepository classScheduleRepository;
 
-    @Autowired
     public ClassScheduleService(ClassScheduleRepository classScheduleRepository) {
         this.classScheduleRepository = classScheduleRepository;
     }
@@ -24,13 +23,13 @@ public class ClassScheduleService {
     // List all schedules
     // --------------------
     public List<ClassSchedule> getAllSchedules() {
-        return classScheduleRepository.findAll();
+        return classScheduleRepository.findAllWithDetails();
     }
 
     // --------------------
     // Find schedule by ID
     // --------------------
-    public Optional<ClassSchedule> getScheduleById(Long id) {
+    public Optional<ClassSchedule> getScheduleById(@NonNull Long id) {
         return classScheduleRepository.findById(id);
     }
 
@@ -71,7 +70,7 @@ public class ClassScheduleService {
     // Update existing schedule
     // --------------------
     @Transactional
-    public ClassSchedule updateSchedule(Long id, ClassSchedule updatedSchedule) {
+    public ClassSchedule updateSchedule(@NonNull Long id, ClassSchedule updatedSchedule) {
 
         ClassSchedule existing = classScheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with id: " + id));
@@ -103,7 +102,7 @@ public class ClassScheduleService {
     // --------------------
     // Delete schedule
     // --------------------
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(@NonNull Long id) {
         classScheduleRepository.deleteById(id);
     }
 }

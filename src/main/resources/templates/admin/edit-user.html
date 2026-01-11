@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Create User - Admin</title>
+    <title>Edit User - Admin</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
   </head>
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Create User</h1>
+            <h1 class="page-title">Edit User</h1>
             <p class="page-subtitle">
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
@@ -36,8 +36,8 @@
 
         <div class="content-card card">
           <form
-            th:action="@{/admin/users/create}"
-            th:object="${user}"
+            th:action="@{/admin/users/update/{id}(id=${editUser.id})}"
+            th:object="${editForm}"
             method="post"
           >
             <input
@@ -52,6 +52,7 @@
                 display: grid;
                 gap: 12px;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+                max-width: 760px;
               "
             >
               <div>
@@ -59,14 +60,9 @@
                 <input
                   class="form-control"
                   type="text"
-                  th:field="*{username}"
-                  required
+                  th:value="${editUser.username}"
+                  disabled
                 />
-                <div
-                  class="error"
-                  th:if="${#fields.hasErrors('username')}"
-                  th:errors="*{username}"
-                ></div>
               </div>
 
               <div>
@@ -114,13 +110,12 @@
                 ></div>
               </div>
 
-              <div>
-                <label>Password</label>
+              <div style="grid-column: 1 / -1">
+                <label>New Password (leave blank to keep)</label>
                 <input
                   class="form-control"
                   type="password"
                   th:field="*{password}"
-                  required
                 />
                 <div
                   class="error"
@@ -129,23 +124,33 @@
                 ></div>
               </div>
 
-              <div>
-                <label>Role</label>
-                <select class="form-control" name="role">
-                  <option value="ROLE_STUDENT">Student</option>
-                  <option value="ROLE_LECTURER">Lecturer</option>
-                  <option value="ROLE_ADMIN">Administrator</option>
-                </select>
+              <div th:if="${isLecturer}">
+                <label>Department</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{department}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('department')}"
+                  th:errors="*{department}"
+                ></div>
               </div>
 
-              <div>
-                <label>Department (Lecturer only)</label>
-                <input class="form-control" type="text" name="department" />
-              </div>
-
-              <div>
-                <label>Office Hours (Lecturer only)</label>
-                <input class="form-control" type="text" name="officeHours" />
+              <div th:if="${isLecturer}">
+                <label>Office Hours</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{officeHours}"
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('officeHours')}"
+                  th:errors="*{officeHours}"
+                ></div>
               </div>
             </div>
 
@@ -158,7 +163,9 @@
               "
             >
               <a href="/admin/users" class="btn">Back to User Management</a>
-              <button type="submit" class="btn btn-primary">Create User</button>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

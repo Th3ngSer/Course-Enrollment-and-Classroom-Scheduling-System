@@ -14,6 +14,15 @@ import java.util.List;
 @Repository
 public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Long> {
 
+        @Query("""
+                                SELECT DISTINCT cs FROM ClassSchedule cs
+                                JOIN FETCH cs.course c
+                                LEFT JOIN FETCH c.lecturer
+                                JOIN FETCH cs.classroom
+                                ORDER BY cs.dayOfWeek, cs.startTime
+                        """)
+        List<ClassSchedule> findAllWithDetails();
+
     /**
      * CRITICAL: Detects scheduling conflicts for a classroom
      * A conflict exists when:

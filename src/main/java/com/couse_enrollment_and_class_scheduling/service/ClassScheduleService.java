@@ -19,6 +19,7 @@ public class ClassScheduleService {
         this.classScheduleRepository = classScheduleRepository;
     }
 
+
     // --------------------
     // List all schedules
     // --------------------

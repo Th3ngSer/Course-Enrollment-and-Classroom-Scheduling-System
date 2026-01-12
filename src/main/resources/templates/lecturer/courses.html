@@ -25,35 +25,55 @@
       </div>
 
       <div class="courses-list">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">CS101 - Introduction to Programming</h3>
-            <span class="badge">Active</span>
-          </div>
+        <div class="card" th:if="${#lists.isEmpty(courses)}">
           <div class="card-body">
-            <p>Schedule: Mon/Wed 9:00-10:30 AM</p>
-            <p>Room: CS Building 101</p>
-            <p>Enrolled Students: 45</p>
+            <p>No courses assigned to you yet.</p>
+            <p>Please ask admin to assign you to a course.</p>
           </div>
-          <a
-            href="/lecturer/courses/1/students"
-            class="btn btn-primary btn-inline"
-            >View Students</a
-          >
         </div>
 
-        <div class="card">
+        <div class="card" th:each="course : ${courses}">
           <div class="card-header">
-            <h3 class="card-title">CS201 - Data Structures</h3>
+            <h3 class="card-title">
+              <span th:text="${course.courseCode}"></span> -
+              <span th:text="${course.courseName}"></span>
+            </h3>
             <span class="badge">Active</span>
           </div>
           <div class="card-body">
-            <p>Schedule: Tue/Thu 2:00-3:30 PM</p>
-            <p>Room: CS Building 205</p>
-            <p>Enrolled Students: 38</p>
+            <p>
+              Classroom:
+              <span
+                th:text="${course.classroom != null ? (course.classroom.building + ' ' + course.classroom.roomNumber) : '—'}"
+              ></span>
+            </p>
+            <p>
+              Enrolled Students:
+              <span th:text="${course.currentStudents}"></span>
+            </p>
+
+            <div th:with="schedules=${schedulesByCourse[course.id]}">
+              <p th:if="${#lists.isEmpty(schedules)}">
+                Schedule: Not scheduled yet
+              </p>
+              <div th:if="${!#lists.isEmpty(schedules)}">
+                <p>Schedule:</p>
+                <ul>
+                  <li th:each="s : ${schedules}">
+                    <span th:text="${s.dayOfWeek}"></span>
+                    <span th:text="${s.startTime}"></span>-
+                    <span th:text="${s.endTime}"></span>
+                    (<span
+                      th:text="${s.classroom != null ? (s.classroom.building + ' ' + s.classroom.roomNumber) : '—'}"
+                    ></span
+                    >)
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
           <a
-            href="/lecturer/courses/2/students"
+            th:href="@{/lecturer/courses/{id}/students(id=${course.id})}"
             class="btn btn-primary btn-inline"
             >View Students</a
           >
@@ -62,3 +82,4 @@
     </div>
   </body>
 </html>
+

@@ -34,6 +34,14 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
+    public List<Course> getCoursesForLecturerUserId(@NonNull Long userId) {
+        return courseRepository.findByLecturer_User_Id(userId);
+    }
+
+    public Optional<Course> getCourseForLecturerUserId(@NonNull Long courseId, @NonNull Long userId) {
+        return courseRepository.findByIdAndLecturer_User_Id(courseId, userId);
+    }
+
 
     // Find course by ID
     public Optional<Course> getCourseById(@NonNull Long id) {

@@ -217,9 +217,16 @@ public class AdminController {
 
     // --- LECTURER MANAGEMENT (Missing Logic) ---
 
+    // @GetMapping("/lecturers/add")
+    // public String addLecturerForm(Model model, Authentication authentication) {
+    //     return "redirect:/admin/users/create";
+    // }
+
     @GetMapping("/lecturers/add")
     public String addLecturerForm(Model model, Authentication authentication) {
-        return "redirect:/admin/users/create";
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("lecturerForm", new AdminLecturerCreateForm());
+        return "admin/lecturers/add-lecturer";
     }
 
     @PostMapping("/lecturers/create")

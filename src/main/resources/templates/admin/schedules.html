@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Manage Schedules - Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body class="dashboard-page">
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <h3>Admin Panel</h3>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/courses">Manage Courses</a>
+        <a href="/admin/lecturers">Manage Lecturers</a>
+        <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules" class="active">Manage Schedules</a>
+        <a href="/admin/users">User Management</a>
+        <a href="/logout" class="danger">Logout</a>
+      </div>
+
+      <div class="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Schedule Management</h1>
+            <p class="page-subtitle">
+              Welcome, <span th:text="${username}"></span> (Admin)
+            </p>
+          </div>
+          <div class="role-pill">ADMIN</div>
+        </div>
+
+        <div class="alert alert-success" th:if="${success}">
+          <span th:text="${success}"></span>
+        </div>
+
+        <div class="alert alert-error" th:if="${error}">
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="content-card card">
+          <div class="toolbar">
+            <a
+              href="/admin/schedules?showCreate=true#create-schedule"
+              class="btn btn-primary"
+              >Add New Schedule</a
+            >
+          </div>
+
+          <div
+            id="create-schedule"
+            class="card"
+            style="margin-bottom: 16px"
+            th:if="${showCreate}"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                align-items: center;
+              "
+            >
+              <h3 style="margin: 0">Create Schedule</h3>
+              <a href="/admin/schedules" class="btn btn-sm">Hide</a>
+            </div>
+
+            <form
+              th:action="@{/admin/schedules/create}"
+              method="post"
+              style="margin-top: 12px"
+            >
+              <input
+                type="hidden"
+                th:if="${_csrf != null}"
+                th:name="${_csrf.parameterName}"
+                th:value="${_csrf.token}"
+              />
+
+              <div
+                style="
+                  display: grid;
+                  gap: 12px;
+                  grid-template-columns: repeat(5, minmax(0, 1fr));
+                "
+              >
+                <div style="grid-column: span 2">
+                  <label for="courseId">Course</label>
+                  <select
+                    id="courseId"
+                    name="courseId"
+                    class="form-control"
+                    required
+                  >
+                    <option value="" disabled selected>Select a course</option>
+                    <option
+                      th:each="course : ${courses}"
+                      th:value="${course.id}"
+                      th:text="${course.courseCode + ' - ' + course.courseName}"
+                    ></option>
+                  </select>
+                </div>
+
+                <div style="grid-column: span 2">
+                  <label for="classroomId">Classroom</label>
+                  <select
+                    id="classroomId"
+                    name="classroomId"
+                    class="form-control"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Select a classroom
+                    </option>
+                    <option
+                      th:each="room : ${classrooms}"
+                      th:value="${room.id}"
+                      th:text="${room.building + ' ' + room.roomNumber}"
+                    ></option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="dayOfWeek">Day</label>
+                  <select
+                    id="dayOfWeek"
+                    name="dayOfWeek"
+                    class="form-control"
+                    required
+                  >
+                    <option value="MONDAY">Monday</option>
+                    <option value="TUESDAY">Tuesday</option>
+                    <option value="WEDNESDAY">Wednesday</option>
+                    <option value="THURSDAY">Thursday</option>
+                    <option value="FRIDAY">Friday</option>
+                    <option value="SATURDAY">Saturday</option>
+                    <option value="SUNDAY">Sunday</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="startTime">Start</label>
+                  <input
+                    id="startTime"
+                    name="startTime"
+                    class="form-control"
+                    type="time"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="endTime">End</label>
+                  <input
+                    id="endTime"
+                    name="endTime"
+                    class="form-control"
+                    type="time"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style="margin-top: 12px; display: flex; gap: 10px">
+                <button type="submit" class="btn btn-primary">
+                  Save Schedule
+                </button>
+                <a href="/admin/schedules" class="btn">Cancel</a>
+              </div>
+            </form>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Course</th>
+                <th>Lecturer</th>
+                <th>Classroom</th>
+                <th>Day</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(schedules)}">
+                <td colspan="8" style="text-align: center; padding: 18px">
+                  No schedules found yet.
+                </td>
+              </tr>
+
+              <tr th:each="s, stat : ${schedules}">
+                <td th:text="${stat.count}"></td>
+                <td
+                  th:text="${s.course != null ? (s.course.courseCode + ' - ' + s.course.courseName) : '—'}"
+                ></td>
+                <td
+                  th:text="${s.course != null && s.course.lecturer != null ? s.course.lecturer.fullName : '—'}"
+                ></td>
+                <td
+                  th:text="${s.classroom != null ? (s.classroom.building + ' ' + s.classroom.roomNumber) : '—'}"
+                ></td>
+                <td th:text="${s.dayOfWeek}"></td>
+                <td th:text="${s.startTime}"></td>
+                <td th:text="${s.endTime}"></td>
+                <td class="action-buttons">
+                  <form
+                    th:action="@{/admin/schedules/delete/{id}(id=${s.id})}"
+                    method="post"
+                    style="display: inline"
+                    onsubmit="return confirm('Delete this schedule?')"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -14,6 +14,25 @@ import java.util.List;
 @Repository
 public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Long> {
 
+        @Query("""
+                                SELECT DISTINCT cs FROM ClassSchedule cs
+                                JOIN FETCH cs.course c
+                                LEFT JOIN FETCH c.lecturer
+                                JOIN FETCH cs.classroom
+                                ORDER BY cs.dayOfWeek, cs.startTime
+                        """)
+        List<ClassSchedule> findAllWithDetails();
+
+        @Query("""
+                                SELECT cs FROM ClassSchedule cs
+                                JOIN FETCH cs.course c
+                                LEFT JOIN FETCH c.lecturer l
+                                JOIN FETCH cs.classroom cr
+                                WHERE l.user.id = :userId
+                                ORDER BY cs.dayOfWeek, cs.startTime
+                        """)
+        List<ClassSchedule> findForLecturerUserIdWithDetails(@Param("userId") Long userId);
+
     /**
      * CRITICAL: Detects scheduling conflicts for a classroom
      * A conflict exists when:
@@ -70,5 +89,7 @@ public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Lo
      * Find all schedules for a specific course
      */
     List<ClassSchedule> findByCourseId(Long courseId);
+
+        long deleteByCourse_Id(Long courseId);
 
 }

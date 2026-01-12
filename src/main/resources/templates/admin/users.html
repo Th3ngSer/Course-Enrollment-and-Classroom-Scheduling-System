@@ -14,6 +14,7 @@
         <a href="/admin/courses">Manage Courses</a>
         <a href="/admin/lecturers">Manage Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users" class="active">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -25,7 +26,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">
@@ -43,6 +44,7 @@
             >
           </div>
 
+          <h2>Administrators</h2>
           <table class="data-table">
             <thead>
               <tr>
@@ -55,19 +57,165 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:if="${#lists.isEmpty(users)}">
+              <tr th:if="${#lists.isEmpty(adminUsers)}">
                 <td colspan="6" style="text-align: center; padding: 18px">
-                  No users found.
+                  No administrators found.
                 </td>
               </tr>
 
-              <tr th:each="u : ${users}">
+              <tr th:each="u : ${adminUsers}">
                 <td th:text="${u.username}"></td>
                 <td th:text="${u.email}"></td>
                 <td th:text="${u.firstName + ' ' + u.lastName}"></td>
-                <td th:text="${#strings.listJoin(u.roles.![name], ', ')}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
                 <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
                 <td class="action-buttons">
+                  <span th:if="${u.username == username}">Current</span>
+
+                  <form
+                    th:if="${u.username != username}"
+                    th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-warning">
+                      <span
+                        th:text="${u.enabled ? 'Disable' : 'Enable'}"
+                      ></span>
+                    </button>
+                  </form>
+
+                  <form
+                    th:if="${u.username != username}"
+                    th:action="@{/admin/users/{id}/delete(id=${u.id})}"
+                    method="post"
+                    style="display: inline"
+                    onsubmit="return confirm('Delete this user?')"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Lecturers</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(lecturerUsers)}">
+                <td colspan="6" style="text-align: center; padding: 18px">
+                  No lecturers found.
+                </td>
+              </tr>
+
+              <tr th:each="u : ${lecturerUsers}">
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.firstName + ' ' + u.lastName}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
+                <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
+                <td class="action-buttons">
+                  <a
+                    th:href="@{/admin/users/edit/{id}(id=${u.id})}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+
+                  <form
+                    th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-warning">
+                      <span
+                        th:text="${u.enabled ? 'Disable' : 'Enable'}"
+                      ></span>
+                    </button>
+                  </form>
+
+                  <form
+                    th:action="@{/admin/users/{id}/delete(id=${u.id})}"
+                    method="post"
+                    style="display: inline"
+                    onsubmit="return confirm('Delete this user?')"
+                  >
+                    <input
+                      type="hidden"
+                      th:if="${_csrf != null}"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Students</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(studentUsers)}">
+                <td colspan="6" style="text-align: center; padding: 18px">
+                  No students found.
+                </td>
+              </tr>
+
+              <tr th:each="u : ${studentUsers}">
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.firstName + ' ' + u.lastName}"></td>
+                <td th:text="${roleDisplay[u.id]}"></td>
+                <td th:text="${u.enabled ? 'Active' : 'Disabled'}"></td>
+                <td class="action-buttons">
+                  <a
+                    th:href="@{/admin/users/edit/{id}(id=${u.id})}"
+                    class="btn btn-sm btn-warning"
+                    >Edit</a
+                  >
+
                   <form
                     th:action="@{/admin/users/{id}/toggle(id=${u.id})}"
                     method="post"

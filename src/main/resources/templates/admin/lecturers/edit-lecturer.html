@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Assign Lecturer - Admin</title>
+    <title>Edit Lecturer - Admin</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
   </head>
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Assign Lecturer to Course</h1>
+            <h1 class="page-title">Edit Lecturer</h1>
             <p class="page-subtitle">
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
@@ -30,59 +30,68 @@
           <div class="role-pill">ADMIN</div>
         </div>
 
-        <div class="alert alert-success" th:if="${success}">
-          <span th:text="${success}"></span>
-        </div>
         <div class="alert alert-error" th:if="${error}">
           <span th:text="${error}"></span>
         </div>
 
         <div class="content-card card">
-          <form action="/admin/lecturers/assign" method="post">
+          <form
+            th:action="@{/admin/lecturers/update/{id}(id=${lecturer.id})}"
+            th:object="${lecturer}"
+            method="post"
+          >
             <input
               type="hidden"
               th:if="${_csrf != null}"
               th:name="${_csrf.parameterName}"
               th:value="${_csrf.token}"
             />
+
             <div style="display: grid; gap: 12px; max-width: 520px">
               <div>
-                <label for="courseId">Course</label>
-                <select
-                  id="courseId"
-                  name="courseId"
+                <label>Full Name</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{fullName}"
                   required
-                  style="width: 100%"
-                >
-                  <option value="" disabled selected>Select a course</option>
-                  <option
-                    th:each="course : ${courses}"
-                    th:value="${course.id}"
-                    th:text="${course.courseCode + ' - ' + course.courseName}"
-                  ></option>
-                </select>
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('fullName')}"
+                  th:errors="*{fullName}"
+                ></div>
               </div>
 
               <div>
-                <label for="lecturerId">Lecturer</label>
-                <select
-                  id="lecturerId"
-                  name="lecturerId"
+                <label>Department</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{department}"
                   required
-                  style="width: 100%"
-                >
-                  <option value="" disabled selected>Select a lecturer</option>
-                  <option
-                    th:each="lecturer : ${lecturers}"
-                    th:value="${lecturer.id}"
-                    th:text="${lecturer.fullName + ' (' + lecturer.department + ')'}"
-                  ></option>
-                </select>
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('department')}"
+                  th:errors="*{department}"
+                ></div>
               </div>
 
-              <div style="display: flex; gap: 10px">
+              <div>
+                <label>Office Hours</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{officeHours}"
+                />
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap">
                 <a href="/admin/lecturers" class="btn">Back</a>
-                <button type="submit" class="btn btn-primary">Assign</button>
+                <button type="submit" class="btn btn-primary">
+                  Save Changes
+                </button>
               </div>
             </div>
           </form>

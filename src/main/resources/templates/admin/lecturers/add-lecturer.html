@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Lecturer - Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+  </head>
+  <body class="dashboard-page">
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <h3>Admin Panel</h3>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/courses">Manage Courses</a>
+        <a href="/admin/lecturers" class="active">Manage Lecturers</a>
+        <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
+        <a href="/admin/users">User Management</a>
+        <a href="/logout" class="danger">Logout</a>
+      </div>
+
+      <div class="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Add Lecturer</h1>
+            <p class="page-subtitle">
+              Welcome, <span th:text="${username}"></span> (Admin)
+            </p>
+          </div>
+          <div class="role-pill">ADMIN</div>
+        </div>
+
+        <div class="alert alert-error" th:if="${error}">
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="content-card card">
+          <form
+            th:action="@{/admin/lecturers/create}"
+            th:object="${lecturerForm}"
+            method="post"
+          >
+            <input
+              type="hidden"
+              th:if="${_csrf != null}"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
+
+            <div style="display: grid; gap: 12px; max-width: 520px">
+              <div>
+                <label>Username</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{username}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('username')}"
+                  th:errors="*{username}"
+                ></div>
+              </div>
+
+              <div>
+                <label>Email</label>
+                <input
+                  class="form-control"
+                  type="email"
+                  th:field="*{email}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}"
+                ></div>
+              </div>
+
+              <div>
+                <label>Password</label>
+                <input
+                  class="form-control"
+                  type="password"
+                  th:field="*{password}"
+                  minlength="6"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('password')}"
+                  th:errors="*{password}"
+                ></div>
+              </div>
+
+              <div>
+                <label>Full Name</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{fullName}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('fullName')}"
+                  th:errors="*{fullName}"
+                ></div>
+              </div>
+
+              <div>
+                <label>Department</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{department}"
+                  required
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('department')}"
+                  th:errors="*{department}"
+                ></div>
+              </div>
+
+              <div>
+                <label>Office Hours</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  th:field="*{officeHours}"
+                />
+                <div
+                  class="error"
+                  th:if="${#fields.hasErrors('officeHours')}"
+                  th:errors="*{officeHours}"
+                ></div>
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                <a href="/admin/lecturers" class="btn">Back</a>
+                <button type="submit" class="btn btn-primary">
+                  Save Lecturer
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

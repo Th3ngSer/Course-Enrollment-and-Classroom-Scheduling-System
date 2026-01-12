@@ -72,12 +72,7 @@ public class AuthController {
         
         // Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
-        // Initialize roles collection
-        if (user.getRoles() == null) {
-            user.setRoles(new HashSet<>());
-        }
-        
+
         // Assign ROLE_STUDENT by default
         Optional<Role> studentRole = roleRepository.findByName("ROLE_STUDENT");
         if (studentRole.isEmpty()) {
@@ -85,7 +80,8 @@ public class AuthController {
                     "System error: Default role not found");
             return "redirect:/register";
         }
-        
+
+        user.setRoles(new HashSet<>());
         user.getRoles().add(studentRole.get());
         
         // Set user as active

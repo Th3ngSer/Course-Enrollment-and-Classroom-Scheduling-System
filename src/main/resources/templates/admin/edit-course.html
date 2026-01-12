@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Create Course - Admin</title>
+    <title>Edit Course - Admin</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/dashboard.css" />
   </head>
@@ -14,6 +14,7 @@
         <a href="/admin/courses" class="active">Manage Courses</a>
         <a href="/admin/lecturers">Manage Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -21,7 +22,7 @@
       <div class="main-content">
         <div class="page-header">
           <div>
-            <h1 class="page-title">Create Course</h1>
+            <h1 class="page-title">Edit Course</h1>
             <p class="page-subtitle">
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
@@ -35,10 +36,17 @@
 
         <div class="content-card card">
           <form
-            th:action="@{/admin/courses/create}"
+            th:action="@{/admin/courses/update/{id}(id=${course.id})}"
             th:object="${course}"
             method="post"
           >
+            <input
+              type="hidden"
+              th:if="${_csrf != null}"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
+
             <div
               style="
                 display: grid;
@@ -127,7 +135,9 @@
               "
             >
               <a href="/admin/courses" class="btn">Back to Course Management</a>
-              <button type="submit" class="btn btn-primary">Save Course</button>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

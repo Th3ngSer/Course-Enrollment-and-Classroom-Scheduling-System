@@ -14,6 +14,7 @@
         <a href="/admin/courses">Manage Courses</a>
         <a href="/admin/lecturers">Assign Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -24,10 +25,10 @@
               Welcome, Admin <span th:text="${username}"></span>!
             </h1>
             <p class="page-subtitle">
-              You have <strong>ROLE_ADMIN</strong> privileges.
+              You have <strong>ADMIN</strong> privileges.
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div th:if="${param.roleNotAllowed}" class="alert alert-error">
@@ -38,15 +39,15 @@
         <div class="stats">
           <div class="stat-card card">
             <p class="stat-label">Total Courses</p>
-            <p class="stat-value">24</p>
+            <p class="stat-value" th:text="${totalCourses}">0</p>
           </div>
           <div class="stat-card card">
             <p class="stat-label">Active Lecturers</p>
-            <p class="stat-value">12</p>
+            <p class="stat-value" th:text="${activeLecturers}">0</p>
           </div>
           <div class="stat-card card">
             <p class="stat-label">Registered Students</p>
-            <p class="stat-value">356</p>
+            <p class="stat-value" th:text="${registeredStudents}">0</p>
           </div>
         </div>
 
@@ -68,3 +69,4 @@
     </div>
   </body>
 </html>
+

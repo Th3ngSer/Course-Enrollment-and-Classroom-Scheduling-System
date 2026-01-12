@@ -14,6 +14,7 @@
         <a href="/admin/courses">Manage Courses</a>
         <a href="/admin/lecturers">Manage Lecturers</a>
         <a href="/admin/classrooms" class="active">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -25,7 +26,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">

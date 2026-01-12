@@ -1,66 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Register - Course Enrollment System</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
     <div class="container">
-        <div class="register-box">
-            <h2>Create New Account</h2>
-            
-            <div th:if="${success}" class="alert alert-success">
-                <span th:text="${success}"></span>
-            </div>
-            <div th:if="${error}" class="alert alert-error">
-                <span th:text="${error}"></span>
-            </div>
-            
-            <form th:action="@{/register}" th:object="${user}" method="post">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" th:field="*{username}" required 
-                           placeholder="Choose a username">
-                    <div th:if="${#fields.hasErrors('username')}" class="error">
-                        <span th:errors="*{username}"></span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" th:field="*{email}" required 
-                           placeholder="Enter your email">
-                    <div th:if="${#fields.hasErrors('email')}" class="error">
-                        <span th:errors="*{email}"></span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" th:field="*{password}" required 
-                           placeholder="Enter password (min 6 characters)">
-                    <div th:if="${#fields.hasErrors('password')}" class="error">
-                        <span th:errors="*{password}"></span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" th:field="*{firstName}" required 
-                           placeholder="Enter your first name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" th:field="*{lastName}" required 
-                           placeholder="Enter your last name">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Register</button> 
-                <a th:href="@{/login}">Back to Login</a>
-            </form>
+      <div class="register-box">
+        <h2>Create New Account</h2>
+
+        <div th:if="${success}" class="alert alert-success">
+          <span th:text="${success}"></span>
         </div>
+        <div th:if="${error}" class="alert alert-error">
+          <span th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/register}" th:object="${user}" method="post">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              th:field="*{username}"
+              required
+              placeholder="Choose a username"
+            />
+            <div th:if="${#fields.hasErrors('username')}" class="error">
+              <span th:errors="*{username}"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              th:field="*{email}"
+              required
+              placeholder="Enter your email"
+            />
+            <div th:if="${#fields.hasErrors('email')}" class="error">
+              <span th:errors="*{email}"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              th:field="*{password}"
+              required
+              placeholder="Enter password (min 6 characters)"
+            />
+            <div th:if="${#fields.hasErrors('password')}" class="error">
+              <span th:errors="*{password}"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              th:field="*{firstName}"
+              required
+              placeholder="Enter your first name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              th:field="*{lastName}"
+              required
+              placeholder="Enter your last name"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Register</button>
+          <a th:href="@{/login}">Back to Login</a>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
 </html>
+

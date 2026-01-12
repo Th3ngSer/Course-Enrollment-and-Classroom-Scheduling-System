@@ -14,6 +14,7 @@
         <a href="/admin/courses" class="active">Manage Courses</a>
         <a href="/admin/lecturers">Manage Lecturers</a>
         <a href="/admin/classrooms">Manage Classrooms</a>
+        <a href="/admin/schedules">Manage Schedules</a>
         <a href="/admin/users">User Management</a>
         <a href="/logout" class="danger">Logout</a>
       </div>
@@ -26,7 +27,7 @@
               Welcome, <span th:text="${username}"></span> (Admin)
             </p>
           </div>
-          <div class="role-pill">ROLE_ADMIN</div>
+          <div class="role-pill">ADMIN</div>
         </div>
 
         <div class="alert alert-success" th:if="${success}">
@@ -47,7 +48,7 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>No.</th>
                 <th>Course Code</th>
                 <th>Course Name</th>
                 <th>Credits</th>
@@ -64,8 +65,8 @@
                 </td>
               </tr>
 
-              <tr th:each="course : ${courses}">
-                <td th:text="${course.id}"></td>
+              <tr th:each="course, stat : ${courses}">
+                <td th:text="${stat.count}"></td>
                 <td th:text="${course.courseCode}"></td>
                 <td th:text="${course.courseName}"></td>
                 <td th:text="${course.credits}"></td>
@@ -76,7 +77,7 @@
                 <td th:text="${course.currentStudents}"></td>
                 <td class="action-buttons">
                   <a
-                    th:href="@{/courses/edit/{id}(id=${course.id})}"
+                    th:href="@{/admin/courses/edit/{id}(id=${course.id})}"
                     class="btn btn-sm btn-warning"
                     >Edit</a
                   >

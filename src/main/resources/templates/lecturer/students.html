@@ -1,41 +1,227 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Course Students - Lecturer</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="app-page">
     <div class="container">
-        <h1>Student List for CS101</h1>
-        <p>Lecturer: <span th:text="${username}"></span></p>
-        
-        <a href="/lecturer/courses" class="btn btn-secondary">Back to Courses</a>
-        
-        <table class="student-table">
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>S001</td>
-                    <td>John Smith</td>
-                    <td>john@student.edu</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>S002</td>
-                    <td>Jane Doe</td>
-                    <td>jane@student.edu</td>
-                    <td>Active</td>
-                </tr>
-            </tbody>
-        </table>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Student List</h1>
+          <p>Lecturer: <span th:text="${username}"></span></p>
+          <p th:if="${course != null}">
+            Course:
+            <strong>
+              <span th:text="${course.courseCode}"></span>
+              -
+              <span th:text="${course.courseName}"></span>
+            </strong>
+          </p>
+        </div>
+        <div class="page-actions">
+          <a href="/lecturer/courses" class="btn btn-secondary btn-inline"
+            >Back to Courses</a
+          >
+        </div>
+      </div>
+
+      <div class="alert alert-success" th:if="${success}">
+        <span th:text="${success}"></span>
+      </div>
+      <div class="alert alert-error" th:if="${error}">
+        <span th:text="${error}"></span>
+      </div>
+
+      <div class="card" th:if="${course != null}" style="margin-bottom: 16px">
+        <div class="card-header">
+          <h3 class="card-title">Add Student</h3>
+        </div>
+        <div class="card-body">
+          <form
+            th:action="@{/lecturer/courses/{id}/students/create(id=${course.id})}"
+            method="post"
+            class="form-compact"
+          >
+            <input
+              type="hidden"
+              th:if="${_csrf != null}"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
+
+            <div class="form-grid" style="max-width: 720px">
+              <div class="form-group">
+                <label>Username</label>
+                <input
+                  class="form-control"
+                  name="username"
+                  placeholder="e.g. s12345"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <input
+                  class="form-control"
+                  type="email"
+                  name="email"
+                  placeholder="student@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+
+              <div class="form-group form-span-2">
+                <label>Password</label>
+                <input
+                  class="form-control"
+                  type="password"
+                  name="password"
+                  minlength="6"
+                  placeholder="Minimum 6 characters"
+                  autocomplete="new-password"
+                  required
+                />
+                <div class="form-help">
+                  This creates a new student account and enrolls them in this
+                  course.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>First Name</label>
+                <input
+                  class="form-control"
+                  name="firstName"
+                  placeholder="First name"
+                  autocomplete="given-name"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Last Name</label>
+                <input
+                  class="form-control"
+                  name="lastName"
+                  placeholder="Last name"
+                  autocomplete="family-name"
+                  required
+                />
+              </div>
+
+              <div class="form-actions form-span-2">
+                <button class="btn btn-primary btn-inline" type="submit">
+                  Create &amp; Enroll
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Enrolled</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(enrollments)}">
+            <td colspan="5">No students enrolled yet.</td>
+          </tr>
+
+          <tr th:each="e : ${enrollments}">
+            <td th:text="${e.student.username}"></td>
+            <td>
+              <span th:text="${e.student.firstName}"></span>
+              <span th:text="${e.student.lastName}"></span>
+            </td>
+            <td th:text="${e.student.email}"></td>
+            <td th:text="${e.enrollmentDate}"></td>
+            <td>
+              <details>
+                <summary
+                  class="btn btn-secondary btn-inline"
+                  style="display: inline-block"
+                >
+                  Edit
+                </summary>
+                <form
+                  th:action="@{/lecturer/courses/{courseId}/students/{studentId}/update(courseId=${course.id}, studentId=${e.student.id})}"
+                  method="post"
+                  style="margin-top: 8px"
+                >
+                  <input
+                    type="hidden"
+                    th:if="${_csrf != null}"
+                    th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}"
+                  />
+                  <div style="display: grid; gap: 8px; max-width: 420px">
+                    <div>
+                      <label>Email</label>
+                      <input
+                        class="form-control"
+                        type="email"
+                        name="email"
+                        th:value="${e.student.email}"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>First Name</label>
+                      <input
+                        class="form-control"
+                        name="firstName"
+                        th:value="${e.student.firstName}"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label>Last Name</label>
+                      <input
+                        class="form-control"
+                        name="lastName"
+                        th:value="${e.student.lastName}"
+                        required
+                      />
+                    </div>
+                    <button class="btn btn-primary btn-inline" type="submit">
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </details>
+
+              <form
+                th:action="@{/lecturer/courses/{courseId}/enrollments/{enrollmentId}/remove(courseId=${course.id}, enrollmentId=${e.id})}"
+                method="post"
+                style="display: inline-block; margin-left: 8px"
+              >
+                <input
+                  type="hidden"
+                  th:if="${_csrf != null}"
+                  th:name="${_csrf.parameterName}"
+                  th:value="${_csrf.token}"
+                />
+                <button class="btn btn-secondary btn-inline" type="submit">
+                  Remove
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</body>
+  </body>
 </html>
+

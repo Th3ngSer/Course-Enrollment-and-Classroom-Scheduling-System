@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public class EnrollmentService {
     // --------------------
     @Transactional
     public Enrollment enrollStudent(Long studentId, Long courseId) {
+        Objects.requireNonNull(studentId, "studentId");
+        Objects.requireNonNull(courseId, "courseId");
+
         // Validation: Check if course exists
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
@@ -62,10 +66,27 @@ public class EnrollmentService {
         return enrollmentRepository.save(enrollment);
     }
 
+    @Transactional
+    public Enrollment enrollStudentByUsername(String username, Long courseId) {
+        Objects.requireNonNull(username, "username");
+        Objects.requireNonNull(courseId, "courseId");
+
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with username: " + username));
+        return enrollStudent(student.getId(), courseId);
+    }
+
     // --------------------
     // Get Student Schedule (Dashboard)
     // --------------------
     public List<Enrollment> getStudentSchedule(Long studentId) {
         return enrollmentRepository.findByStudentId(studentId);
+    }
+
+    public List<Enrollment> getStudentScheduleByUsername(String username) {
+        Objects.requireNonNull(username, "username");
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with username: " + username));
+        return getStudentSchedule(student.getId());
     }
 }

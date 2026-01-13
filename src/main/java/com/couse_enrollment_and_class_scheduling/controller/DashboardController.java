@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+
 import java.util.stream.Collectors;
 
 @Controller
@@ -34,7 +36,12 @@ public class DashboardController {
     }
     
     @GetMapping("/")
-    public String home() {
+    public String home(Authentication authentication) {
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/dashboard";
+        }
         return "redirect:/login";
     }
 }

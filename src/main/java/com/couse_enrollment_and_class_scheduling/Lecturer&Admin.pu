@@ -1,0 +1,34 @@
+@startuml
+skinparam actorStyle awesome
+' --- Visual Styling ---
+skinparam sequence {
+    ParticipantBackgroundColor #E1F5FE
+    ActorBackgroundColor #FFE0B2
+    LifeLineBorderColor #2688d4
+}
+
+actor Admin
+actor Lecturer
+participant "Security System" as Auth
+participant "Course Management" as CourseMod
+participant "Schedule Module" as SchedMod
+database "Database" as DB
+
+title Admin & Lecturer Collaborative Flow
+
+== Phase 1: Authorization ==
+Admin -> Auth : Assign 'LECTURER' Role to User
+Auth -> DB : Update User Permissions
+Note right: Admin enables the Lecturer to work
+
+== Phase 2: Content Creation ==
+Lecturer -> CourseMod : Create New Course (Java CRUD)
+CourseMod -> DB : Save Course Details [1]
+
+== Phase 3: Resource Scheduling ==
+Admin -> SchedMod : Define Available Classrooms
+Lecturer -> SchedMod : Map Course to Classroom & Time
+SchedMod -> DB : Save Final Schedule [1]
+
+Note over Admin, Lecturer : The system is now ready for Student Enrollment
+@enduml

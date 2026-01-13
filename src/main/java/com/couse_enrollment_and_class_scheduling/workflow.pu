@@ -1,0 +1,69 @@
+@startuml
+' --- Visual Styling ---
+skinparam roundcorner 10
+skinparam shadowing true
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+skinparam package {
+    BackgroundColor #f8f9fa
+    BorderColor #dee2e6
+}
+
+title Course Enrollment & Scheduling System - Architecture
+
+package "Security Layer (Lead 1)" #E1F5FE {
+    class User <<Entity>> {
+        - Long id
+        - String username
+        - String password
+        + validateCredentials()
+    }
+    class Role <<Entity>> {
+        - Long id
+        - String name
+        + String STUDENT
+    }
+}
+
+package "Core Academic Modules (Lead 2 & 3)" #F1F8E9 {
+    class Course <<Main CRUD>> {
+        - Long id
+        - String title
+        - Integer credits
+        + updateCourseInfo()
+    }
+    class Schedule <<Secondary CRUD>> {
+        - Long id
+        - String roomNumber
+        - LocalDateTime startTime
+        - LocalDateTime endTime
+    }
+    class Student <<Entity>> {
+        - Long id
+        - String yearLevel
+    }
+    class Lecturer <<Entity>> {
+        - Long id
+        - String department
+    }
+}
+
+package "Infrastructure (Lead 5)" #FFF3E0 {
+    class Database <<Flyway>> {
+        + v1__init_schema.sql
+        + v2__add_constraints.sql
+    }
+}
+
+' --- Relationships ---
+User "1" *-right- "1" Role : has permission
+Student --|> User : extends
+Lecturer --|> User : extends
+Lecturer "1" -- "*" Course : manages
+Course "1" *-- "*" Schedule : assigned to
+Student "*" -- "*" Course : enrolls in (Enrollment Table)
+
+@enduml

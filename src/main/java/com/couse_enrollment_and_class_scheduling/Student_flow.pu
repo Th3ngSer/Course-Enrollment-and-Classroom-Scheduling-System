@@ -1,0 +1,37 @@
+@startuml
+' --- Visual Styling ---
+skinparam sequence {
+    ParticipantBackgroundColor #E1F5FE
+    ActorBackgroundColor #FFE0B2
+    LifeLineBorderColor #2688d4
+}
+
+actor Student
+participant "Thymeleaf UI" as UI
+participant "Spring Security" as Auth
+participant "Course Controller" as Controller
+database "PostgreSQL/H2" as DB
+
+title Technical Sequence Flow
+
+Student -> UI : Access Enrollment Page
+UI -> Auth : Validate Role (STUDENT)
+activate Auth
+Auth --> UI : Access Granted
+deactivate Auth
+
+Student -> UI : Select Course & Click 'Enroll'
+UI -> Controller : POST /enroll/{courseId}
+activate Controller
+
+Controller -> Controller : Validate Prerequisites (Java Logic)
+Controller -> DB : Save Enrollment Record (Flyway Schema)
+activate DB
+DB --> Controller : Success
+deactivate DB
+
+Controller --> UI : Return Confirmation View
+deactivate Controller
+UI --> Student : Display "Enrolled Successfully!"
+
+@enduml
